@@ -1,0 +1,37 @@
+name: Build and Package
+
+# Ejecuta este workflow en cada push o pull request a la rama "main"
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+# Define los trabajos (jobs)
+jobs:
+  build:
+    runs-on: ubuntu-latest # Usa un entorno Ubuntu para compilar
+
+    steps:
+      # Paso 1: Clonar el repositorio
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Paso 2: Configurar Java (especifica tu versión de Java)
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21' # Cambia según la versión de Java que uses
+
+      # Paso 3: Ejecutar Maven para compilar el proyecto
+      - name: Build with Maven
+        run: mvn clean package
+
+      # Paso 4: Subir el archivo .jar generado como artefacto
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Plugin Jar
+          path: target/*.jar # Cambia "target/*.jar" si tu archivo tiene un nombre diferente

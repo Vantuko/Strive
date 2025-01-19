@@ -22,7 +22,7 @@ public final class Main extends JavaPlugin {
 
         //Registro de comandos
         getCommand("strive").setExecutor(new Comandos(this));
-        getCommand("strive").setTabCompleter(new StriveTabCompleter());
+        getCommand("strive").setTabCompleter(new StriveTabCompleter(this));
 
         //Registro de eventos
         PluginManager pm = Bukkit.getServer().getPluginManager();

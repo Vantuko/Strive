@@ -10,9 +10,15 @@ import java.util.List;
 
 public class StriveTabCompleter implements TabCompleter {
 
+    private final Main plugin;
+
+    public StriveTabCompleter(Main plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args){
-        final Main plugin = null;
+
         
         List<String> suggestions = new ArrayList<>();
             if(command.getName().equalsIgnoreCase("strive")){

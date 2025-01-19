@@ -3,3 +3,5 @@ purga:
   jugadores_maximos: 1
 
 strive-commands:
+  - host
+  - reload

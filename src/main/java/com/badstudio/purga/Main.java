@@ -1,6 +1,8 @@
 package com.badstudio.purga;
 
+import com.badstudio.purga.commands.StriveTabCompleter;
 import com.badstudio.purga.listeners.Events;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.badstudio.purga.commands.Comandos;
@@ -21,6 +23,7 @@ public final class Main extends JavaPlugin {
 
         //Registro de comandos
         getCommand("strive").setExecutor(new Comandos(this));
+        getCommand("strive").setTabCompleter(new StriveTabCompleter());
 
         PluginManager pm = Bukkit.getServer().getPluginManager();
         pm.registerEvents(new Events(), this);

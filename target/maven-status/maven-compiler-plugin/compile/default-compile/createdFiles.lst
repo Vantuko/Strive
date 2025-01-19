@@ -1,0 +1,5 @@
+com\badstudio\purga\utils\StriveTabCompleter.class
+com\badstudio\purga\commands\Comandos.class
+com\badstudio\purga\listeners\Events.class
+com\badstudio\purga\Main.class
+com\badstudio\purga\utils\Config.class

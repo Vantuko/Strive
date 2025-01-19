@@ -1,0 +1,9 @@
+name: Purga
+version: '1.0 [BETA]'
+main: com.badstudio.purga.Main
+api-version: '1.21'
+authors: [ SMyBad, Vantuko1 ]
+description: Private Plugin
+commands:
+  strive:
+    permission: op

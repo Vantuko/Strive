@@ -1,0 +1,5 @@
+# Sirve para verificar cuantos jugadores debe haber para iniciar.
+purga:
+  jugadores_maximos: 1
+
+strive-commands:

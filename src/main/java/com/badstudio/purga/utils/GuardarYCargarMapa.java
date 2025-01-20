@@ -25,33 +25,27 @@ public class GuardarYCargarMapa {
     }
 
     public void guardarMapa(org.bukkit.World bukkitWorld, int x1, int y1, int z1, int x2, int y2, int z2, String nombreArchivo) {
-        // Convierte el mundo de Bukkit a WorldEdit
         com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(bukkitWorld);
 
-        // Define la región cúbica
         BlockVector3 pos1 = BlockVector3.at(x1, y1, z1);
         BlockVector3 pos2 = BlockVector3.at(x2, y2, z2);
         CuboidRegion region = new CuboidRegion(weWorld, pos1, pos2);
 
-        // Crea el clipboard
         BlockArrayClipboard clipboard = new BlockArrayClipboard(region);
-
-        // Define el archivo .schem
         File archivo = new File(plugin.getDataFolder(), nombreArchivo + ".schem");
 
-        // Valida que la carpeta del plugin exista
         if (!plugin.getDataFolder().exists()) {
             plugin.getDataFolder().mkdirs();
         }
 
         try (EditSession editSession = WorldEdit.getInstance().newEditSession(weWorld);
              FileOutputStream fos = new FileOutputStream(archivo)) {
-            // Obtiene el formato del archivo
+
+            // Encuentra el formato válido basado en la extensión del archivo
             ClipboardFormat formato = ClipboardFormats.findByFile(archivo);
 
-            // Verifica si el formato es válido
             if (formato == null) {
-                Bukkit.getLogger().severe("El formato del archivo no es válido para guardar el mapa.");
+                Bukkit.getLogger().severe("No se pudo encontrar un formato válido para el archivo: " + archivo.getName());
                 return;
             }
 
@@ -61,7 +55,9 @@ public class GuardarYCargarMapa {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
+
 
     public void cargarMapa(org.bukkit.World mundo, int x, int y, int z, String nombreArchivo) {
         File archivo = new File(plugin.getDataFolder(), nombreArchivo + ".schem");

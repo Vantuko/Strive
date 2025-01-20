@@ -5,3 +5,12 @@ purga:
 strive-commands:
   - host
   - reload
+spleef:
+  pos1:
+    x1: 0
+    y1: 0
+    z1: 0
+  pos2:
+    x2: 0
+    y2: 0
+    z2: 0

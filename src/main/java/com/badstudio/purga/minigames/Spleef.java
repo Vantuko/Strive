@@ -28,8 +28,8 @@ public class Spleef implements CommandExecutor {
         Player player = (Player) sender;
 
 
-        int x1 = -8, y1 = 149, z1 = 8; //Pos 1
-        int x2 = 8, y2 = 153, z2 = -8; //Pos 2
+        int x1 = (plugin.getConfig().getInt("spleef.pos1.x1")), y1 = (plugin.getConfig().getInt("spleef.pos1.y1")), z1 = (plugin.getConfig().getInt("spleef.pos1.z1")); //Pos 1
+        int x2 = (plugin.getConfig().getInt("spleef.pos2.x2")), y2 = (plugin.getConfig().getInt("spleef.pos2.y2")), z2 = (plugin.getConfig().getInt("spleef.pos2.z2")); //Pos 2
 
         World mundo = Bukkit.getWorld("Spleef");
 

@@ -61,8 +61,8 @@ public class Spleef implements CommandExecutor {
                     jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_HAT, 1, 1);
                 }
 
-                // Cuando el tiempo llegue a 1, destruye los bloques y cancela la tarea
-                if (tiempoRestante[0] <= 1) {
+                // Cuando el tiempo llegue a 0, destruye los bloques y cancela la tarea
+                if (tiempoRestante[0] <= 0) {
                     for (Player jugador : mundo.getPlayers()){
                         jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_BIT, 1, 2);
                     }

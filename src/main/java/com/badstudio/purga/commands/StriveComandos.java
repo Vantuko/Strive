@@ -74,6 +74,10 @@ public class StriveComandos implements CommandExecutor {
 
                     Jugador.kickPlayer(ChatColor.RED + "Fuiste eliminado por la purga!");
 
+                    for (Player jugador : Jugadores) {
+                        jugador.sendTitle(ChatColor.GOLD+Jugador.getName(), ChatColor.RED+"Eliminado",5, 15, 3);
+                    }
+
                 }, delay);
 
                 delay += intervalo;

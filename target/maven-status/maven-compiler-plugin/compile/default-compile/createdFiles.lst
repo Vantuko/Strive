@@ -1,4 +1,5 @@
 com\badstudio\purga\minigames\Spleef.class
+com\badstudio\purga\minigames\LaPala.class
 com\badstudio\purga\listeners\Events.class
 com\badstudio\purga\Main.class
 com\badstudio\purga\commands\StriveTabCompleter.class

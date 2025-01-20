@@ -2,7 +2,8 @@ package com.badstudio.purga;
 
 import com.badstudio.purga.commands.StriveTabCompleter;
 import com.badstudio.purga.listeners.Events;
-import com.badstudio.purga.minigames.Spleef;
+import com.badstudio.purga.minigames.spleef.Spleef;
+import com.badstudio.purga.minigames.spleef.LaPala;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.badstudio.purga.commands.StriveComandos;
@@ -23,14 +24,13 @@ public final class Main extends JavaPlugin {
 
         //Registro de comandos
         getCommand("strive").setExecutor(new StriveComandos(this));
-        getCommand("Spleef").setExecutor(new Spleef(this));
+        getCommand("spleef").setExecutor(new Spleef(this));
         getCommand("strive").setTabCompleter(new StriveTabCompleter(this));
 
         //Registro de eventos
         PluginManager pm = Bukkit.getServer().getPluginManager();
         pm.registerEvents(new Events(), this);
-
-
+        pm.registerEvents(new LaPala(), this);
     }
 
     @Override

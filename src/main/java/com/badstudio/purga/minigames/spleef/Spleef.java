@@ -49,24 +49,31 @@ public class Spleef implements CommandExecutor {
     }
 
     private void Inicio(World mundo, int x1, int y1, int z1, int x2, int y2, int z2) {
+        // Define la duración de la cuenta regresiva (en segundos)
+        final int[] tiempoRestante = {plugin.getConfig().getInt("spleef.duracionInicio")}; // Cambia a la duración deseada
 
-        final int[] tiempoRestante = {plugin.getConfig().getInt("spleef.duracionInicio")};
 
+        // Programa una tarea repetitiva para la cuenta regresiva
         new BukkitRunnable() {
             @Override
             public void run() {
-
+                // Reduce el tiempo restante
                 tiempoRestante[0]--;
 
-                for (Player jugador : mundo.getPlayers()) {
-                    jugador.sendTitle(ChatColor.RED + "" + ChatColor.BOLD +tiempoRestante[0],"", 5, 10, 5);
-                    jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_HAT, 1, 1);
+                // Muestra la cuenta regresiva a todos los jugadores
+                if(tiempoRestante[0] > 0) {
+                    for (Player jugador : mundo.getPlayers()) {
+                        jugador.sendTitle(ChatColor.RED + "" + ChatColor.BOLD + tiempoRestante[0], "", 5, 10, 5);
+                        jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_HAT, 1, 1);
+                    }
                 }
-                if (tiempoRestante[0] <= 0) {
-                    for (Player jugador : mundo.getPlayers()){
+
+
+                if (tiempoRestante[0] == 1) {
+                    for (Player jugador : mundo.getPlayers()) {
                         jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_BIT, 1, 2);
-                        jugador.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20*3, 0));
-                        Bukkit.getScheduler().runTaskLater(plugin, palaSpleef(jugador), 20*3L);
+                        jugador.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 3, 0));
+                        Bukkit.getScheduler().runTaskLater(plugin, palaSpleef(jugador), 20 * 3L);
                     }
 
                     destruirBloques(mundo, x1, y1, z1, x2, y2, z2);
@@ -74,8 +81,10 @@ public class Spleef implements CommandExecutor {
                     cancel();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(plugin, 0L, 20L); // Ejecuta cada 20 ticks (1 segundo)
     }
+
+    // Método para destruir los bloques
     private void destruirBloques(World mundo, int x1, int y1, int z1, int x2, int y2, int z2) {
         int minX = Math.min(x1, x2);
         int maxX = Math.max(x1, x2);

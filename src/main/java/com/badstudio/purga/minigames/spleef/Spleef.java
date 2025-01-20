@@ -34,44 +34,33 @@ public class Spleef implements CommandExecutor {
             }
             Player player = (Player) sender;
 
-
             int x1 = (plugin.getConfig().getInt("spleef.pos1.x1")), y1 = (plugin.getConfig().getInt("spleef.pos1.y1")), z1 = (plugin.getConfig().getInt("spleef.pos1.z1")); //Pos 1
             int x2 = (plugin.getConfig().getInt("spleef.pos2.x2")), y2 = (plugin.getConfig().getInt("spleef.pos2.y2")), z2 = (plugin.getConfig().getInt("spleef.pos2.z2")); //Pos 2
-
-
 
             if (mundo != null) {
                 Inicio(mundo, x1, y1, z1, x2, y2, z2);
             } else {
                 Bukkit.getLogger().warning("¡El mundo especificado no existe!");
-
             }
-
         } else {
             sender.sendMessage(ChatColor.RED + "Eror al encontrar el mundo!");
         }
-
         return true;
     }
-
     private void Inicio(World mundo, int x1, int y1, int z1, int x2, int y2, int z2) {
         final int[] tiempoRestante = {plugin.getConfig().getInt("spleef.duracionInicio")}; // Cambia a la duración deseada
 
         new BukkitRunnable() {
             @Override
             public void run() {
-                // Reduce el tiempo restante
                 tiempoRestante[0]--;
 
-                // Mostrar la cuenta regresiva si el tiempo es mayor a 0
                 if (tiempoRestante[0] > 0) {
                     for (Player jugador : mundo.getPlayers()) {
                         jugador.sendTitle(ChatColor.RED + "" + ChatColor.BOLD + tiempoRestante[0], "", 5, 10, 5);
                         jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_HAT, 1, 1);
                     }
                 }
-
-                // Cuando el tiempo llegue a 0, realiza las acciones finales y cancela la tarea
                 if (tiempoRestante[0] == 0) {
                     for (Player jugador : mundo.getPlayers()) {
                         jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_BIT, 1, 2);
@@ -81,7 +70,6 @@ public class Spleef implements CommandExecutor {
 
                     destruirBloques(mundo, x1, y1, z1, x2, y2, z2);
 
-                    // Cancela la tarea
                     cancel();
                 }
             }

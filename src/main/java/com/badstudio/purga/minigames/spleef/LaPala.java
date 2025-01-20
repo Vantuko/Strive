@@ -24,7 +24,7 @@ public class LaPala implements Listener {
 
         if (mundo != null && e.getBlock().getWorld().equals(mundo)) {
             if (e.getBlock().getType() == Material.SNOW_BLOCK) {
-                e.setDropItems(true);
+                e.setDropItems(false);
 
                 Player jugador = e.getPlayer();
                 UUID jugadorID = jugador.getUniqueId();

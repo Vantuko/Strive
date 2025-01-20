@@ -1,8 +1,8 @@
-C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\purga\commands\StriveComandos.java
-C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\purga\commands\StriveTabCompleter.java
-C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\purga\listeners\Events.java
-C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\purga\Main.java
-C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\purga\minigames\spleef\LaPala.java
-C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\purga\minigames\spleef\Spleef.java
-C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\purga\utils\Config.java
-C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\purga\utils\GuardarYCargarMapa.java
+C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\plugin\commands\StriveComandos.java
+C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\plugin\commands\StriveTabCompleter.java
+C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\plugin\listeners\Events.java
+C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\plugin\Main.java
+C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\plugin\minigames\spleef\LaPala.java
+C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\plugin\minigames\spleef\Spleef.java
+C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\plugin\utils\Config.java
+C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\plugin\utils\GuardarMapa.java

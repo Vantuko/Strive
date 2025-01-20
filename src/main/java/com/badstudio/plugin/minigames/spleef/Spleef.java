@@ -1,6 +1,7 @@
 package com.badstudio.plugin.minigames.spleef;
 
 import com.badstudio.plugin.Main;
+import com.badstudio.plugin.utils.GuardarMapa;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -18,6 +19,7 @@ public class Spleef implements CommandExecutor {
 
 
     private final Main plugin;
+    private final GuardarMapa guardarMapa = new GuardarMapa();
 
 
     public Spleef(Main plugin) {
@@ -34,14 +36,23 @@ public class Spleef implements CommandExecutor {
                 return true;
             }
             Player player = (Player) sender;
-
-            int x1 = (plugin.getConfig().getInt("spleef.pos1.x1")), y1 = (plugin.getConfig().getInt("spleef.pos1.y1")), z1 = (plugin.getConfig().getInt("spleef.pos1.z1")); //Pos 1
-            int x2 = (plugin.getConfig().getInt("spleef.pos2.x2")), y2 = (plugin.getConfig().getInt("spleef.pos2.y2")), z2 = (plugin.getConfig().getInt("spleef.pos2.z2")); //Pos 2
-
-            int x1m1 = (plugin.getConfig().getInt("spleef.pos1Mapa1.x1")), y1m1 = (plugin.getConfig().getInt("spleef.pos1Mapa1.y1")), z1m1=(plugin.getConfig().getInt("spleef.pos1Mapa1.z1")), x2m1 = (plugin.getConfig().getInt("spleef.pos2Mapa1.x2")), y2m1 = (plugin.getConfig().getInt("spleef.pos2Mapa1.y2")), z2m1 = (plugin.getConfig().getInt("spleef.pos2Mapa1.z2"));
+            //cords 1
+            int x1 = plugin.getConfig().getInt("spleef.pos1.x1");
+            int y1 = plugin.getConfig().getInt("spleef.pos1.y1");
+            int z1 = plugin.getConfig().getInt("spleef.pos1.z1");
+            int x2 = plugin.getConfig().getInt("spleef.pos2.x2");
+            int y2 = plugin.getConfig().getInt("spleef.pos2.y2");
+            int z2 = plugin.getConfig().getInt("spleef.pos2.z2");
+            //cords 2
+            int x3 = plugin.getConfig().getInt("spleef.pos3.x1");
+            int y3 = plugin.getConfig().getInt("spleef.pos3.y1");
+            int z3 = plugin.getConfig().getInt("spleef.pos3.z1");
+            int x4 = plugin.getConfig().getInt("spleef.pos4.x2");
+            int y4 = plugin.getConfig().getInt("spleef.pos4.y2");
+            int z4 = plugin.getConfig().getInt("spleef.pos4.z2");
 
             if (mundo != null) {
-
+                guardarMapa.guardarMapa(mundo, x3, y3, z3, x4, y4, z4);
                 Inicio(mundo, x1, y1, z1, x2, y2, z2);
             } else {
                 Bukkit.getLogger().warning("¡El mundo especificado no existe!");
@@ -73,6 +84,11 @@ public class Spleef implements CommandExecutor {
                     }
 
                     destruirBloques(mundo, x1, y1, z1, x2, y2, z2);
+
+                    Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                        guardarMapa.restaurarMapa(mundo);
+                        guardarMapa.limpiarDatos(); // Limpiar los datos de memoria después de restaurar
+                    }, 20 * 180L); // 3 minutos en ticks
 
                     cancel();
                 }

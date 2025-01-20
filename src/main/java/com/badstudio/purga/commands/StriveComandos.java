@@ -16,11 +16,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Comandos implements CommandExecutor {
+public class StriveComandos implements CommandExecutor {
 
     private final Main plugin;
 
-    public Comandos(Main plugin) {
+    public StriveComandos(Main plugin) {
         this.plugin = plugin;
     }
 
@@ -95,7 +95,7 @@ public class Comandos implements CommandExecutor {
         }
     }
 
-    public void launchFirework(World world, Location locPlayer){
+    public void launchFirework(World world, Location locPlayer) {
         int durationFireworks = (plugin.getConfigs().duracionFireworks());
 
         Firework firework = (Firework) world.spawnEntity(locPlayer, EntityType.FIREWORK_ROCKET);

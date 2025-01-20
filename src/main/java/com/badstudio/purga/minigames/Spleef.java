@@ -19,23 +19,30 @@ public class Spleef implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length==1) {
-            Player player = (Player) sender;
 
-            int x1 = -8, y1 = 149, z1 = 8; //Pos 1
-            int x2 = 8, y2 = 153, z2 = -8; //Pos 2
 
-            World mundo = Bukkit.getWorld("Spleef");
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(ChatColor.RED + "Este comando solo puede ser ejecutado por un jugador.");
+            return true;
+        }
+        Player player = (Player) sender;
 
-            if (mundo != null) {
-                Inicio(mundo, x1, y1, z1, x2, y2, z2);
-            } else {
-                Bukkit.getLogger().warning("¡El mundo especificado no existe!");
 
-            }
+        int x1 = -8, y1 = 149, z1 = 8; //Pos 1
+        int x2 = 8, y2 = 153, z2 = -8; //Pos 2
+
+        World mundo = Bukkit.getWorld("Spleef");
+
+        if (mundo != null) {
+            Inicio(mundo, x1, y1, z1, x2, y2, z2);
+            player.sendMessage("Se a ejecutado correctamente!");
+        } else {
+            Bukkit.getLogger().warning("¡El mundo especificado no existe!");
+
         }
         return true;
     }
+
     private void Inicio(World mundo, int x1, int y1, int z1, int x2, int y2, int z2) {
         int minX = Math.min(x1, x2);
         int maxX = Math.max(x1, x2);

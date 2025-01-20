@@ -5,5 +5,8 @@ api-version: '1.21'
 authors: [ SMyBad, Vantuko1 ]
 description: Private Plugin
 commands:
+  spleef:
+    permission: op
   strive:
     permission: op
+

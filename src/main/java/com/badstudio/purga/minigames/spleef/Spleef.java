@@ -25,26 +25,32 @@ public class Spleef implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-
-
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "Este comando solo puede ser ejecutado por un jugador.");
-            return true;
-        }
-        Player player = (Player) sender;
-
-
-        int x1 = (plugin.getConfig().getInt("spleef.pos1.x1")), y1 = (plugin.getConfig().getInt("spleef.pos1.y1")), z1 = (plugin.getConfig().getInt("spleef.pos1.z1")); //Pos 1
-        int x2 = (plugin.getConfig().getInt("spleef.pos2.x2")), y2 = (plugin.getConfig().getInt("spleef.pos2.y2")), z2 = (plugin.getConfig().getInt("spleef.pos2.z2")); //Pos 2
-
         World mundo = Bukkit.getWorld("Spleef");
 
-        if (mundo != null) {
-            Inicio(mundo, x1, y1, z1, x2, y2, z2);
-        } else {
-            Bukkit.getLogger().warning("¡El mundo especificado no existe!");
+        if(Bukkit.getWorlds().contains(mundo)){
+            if (!(sender instanceof Player)) {
+                sender.sendMessage(ChatColor.RED + "Este comando solo puede ser ejecutado por un jugador.");
+                return true;
+            }
+            Player player = (Player) sender;
 
+
+            int x1 = (plugin.getConfig().getInt("spleef.pos1.x1")), y1 = (plugin.getConfig().getInt("spleef.pos1.y1")), z1 = (plugin.getConfig().getInt("spleef.pos1.z1")); //Pos 1
+            int x2 = (plugin.getConfig().getInt("spleef.pos2.x2")), y2 = (plugin.getConfig().getInt("spleef.pos2.y2")), z2 = (plugin.getConfig().getInt("spleef.pos2.z2")); //Pos 2
+
+
+
+            if (mundo != null) {
+                Inicio(mundo, x1, y1, z1, x2, y2, z2);
+            } else {
+                Bukkit.getLogger().warning("¡El mundo especificado no existe!");
+
+            }
+
+        } else {
+            sender.sendMessage(ChatColor.RED + "Eror al encontrar el mundo!");
         }
+
         return true;
     }
 

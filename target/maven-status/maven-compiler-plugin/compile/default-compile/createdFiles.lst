@@ -1,8 +1,9 @@
-com\badstudio\purga\minigames\Spleef.class
-com\badstudio\purga\minigames\LaPala.class
+com\badstudio\purga\minigames\spleef\LaPala.class
+com\badstudio\purga\minigames\spleef\Spleef$1.class
 com\badstudio\purga\listeners\Events.class
+com\badstudio\purga\minigames\spleef\Spleef$2.class
 com\badstudio\purga\Main.class
+com\badstudio\purga\minigames\spleef\Spleef.class
 com\badstudio\purga\commands\StriveTabCompleter.class
 com\badstudio\purga\utils\Config.class
-com\badstudio\purga\minigames\Spleef$1.class
 com\badstudio\purga\commands\StriveComandos.class

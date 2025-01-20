@@ -14,4 +14,13 @@ spleef:
     x2: 7
     y2: 160
     z2: -7
-  duracionInicio: 11 #No se incluye el ultimo numero Ej. pones 10 pero empieza en 9
+  duracionInicio: 11 #No se incluye el último número Ej. Pones 10 pero empieza en 9
+
+  pos1Mapa1:
+    x1: -30
+    y1: 0
+    z1: 30
+  pos2Mapa1:
+    x2: 30
+    y2: 200
+    z2: -30

@@ -1,5 +1,7 @@
 package com.badstudio.plugin.utils;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -29,11 +31,11 @@ public class GuardarMapa {
                 }
             }
         }
-        System.out.println("Mapa guardado en memoria. Total de bloques: " + bloquesOriginales.size());
+        Bukkit.getLogger().info(ChatColor.GREEN + "Mapa guardado en memoria. Total de bloques: " + bloquesOriginales.size());
     }
     public void restaurarMapa(World mundo) {
         if (bloquesOriginales.isEmpty()) {
-            System.out.println("No hay bloques guardados para restaurar.");
+            Bukkit.getLogger().info("No hay bloques guardados para restaurar.");
             return;
         }
         // Itera por los bloques guardados y restaura su tipo original
@@ -44,12 +46,12 @@ public class GuardarMapa {
             Block bloque = mundo.getBlockAt(pos.getBlockX(), pos.getBlockY(), pos.getBlockZ());
             bloque.setType(tipo);
         }
-        System.out.println("Mapa restaurado correctamente. Bloques restaurados: " + bloquesOriginales.size());
+        Bukkit.getLogger().info(ChatColor.GREEN + "Mapa restaurado correctamente. Bloques restaurados: " + bloquesOriginales.size());
     }
 
     public void limpiarDatos() {
         bloquesOriginales.clear();
-        System.out.println("Datos de bloques en memoria limpiados.");
+        Bukkit.getLogger().info("Datos de bloques en memoria limpiados.");
     }
 }
 

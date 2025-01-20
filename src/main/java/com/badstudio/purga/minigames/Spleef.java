@@ -6,6 +6,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 
@@ -65,6 +67,7 @@ public class Spleef implements CommandExecutor {
                 if (tiempoRestante[0] <= 0) {
                     for (Player jugador : mundo.getPlayers()){
                         jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_BIT, 1, 2);
+                        jugador.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20*3, 0));
                     }
 
                     destruirBloques(mundo, x1, y1, z1, x2, y2, z2);

@@ -1,4 +1,5 @@
 package com.badstudio.purga.utils;
+
 import com.badstudio.purga.Main;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;

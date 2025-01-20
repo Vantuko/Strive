@@ -1,7 +1,10 @@
 package com.badstudio.purga.minigames.spleef;
 
 import com.badstudio.purga.Main;
+import com.badstudio.purga.utils.GuardarYCargarMapa;
 import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,11 +16,15 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Spleef implements CommandExecutor {
 
 
     private final Main plugin;
+
 
     public Spleef(Main plugin) {
         this.plugin = plugin;
@@ -37,13 +44,19 @@ public class Spleef implements CommandExecutor {
             int x1 = (plugin.getConfig().getInt("spleef.pos1.x1")), y1 = (plugin.getConfig().getInt("spleef.pos1.y1")), z1 = (plugin.getConfig().getInt("spleef.pos1.z1")); //Pos 1
             int x2 = (plugin.getConfig().getInt("spleef.pos2.x2")), y2 = (plugin.getConfig().getInt("spleef.pos2.y2")), z2 = (plugin.getConfig().getInt("spleef.pos2.z2")); //Pos 2
 
+            int x1m1 = (plugin.getConfig().getInt("spleef.pos1Mapa1.x1")), y1m1 = (plugin.getConfig().getInt("spleef.pos1Mapa1.y1")), z1m1=(plugin.getConfig().getInt("spleef.pos1Mapa1.z1")), x2m1 = (plugin.getConfig().getInt("spleef.pos2Mapa1.x2")), y2m1 = (plugin.getConfig().getInt("spleef.pos2Mapa1.y2")), z2m1 = (plugin.getConfig().getInt("spleef.pos2Mapa1.z2"));
+
             if (mundo != null) {
+                plugin.getMapaManager().guardarMapa(mundo, x1m1, y1m1, z1m1, x2m1, y2m1, z2m1, "Spleef");
                 Inicio(mundo, x1, y1, z1, x2, y2, z2);
+                Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                    plugin.getMapaManager().cargarMapa(mundo, x1m1, y1m1, z1m1, "Spleef");
+                }, 20 * 180L);
             } else {
                 Bukkit.getLogger().warning("¡El mundo especificado no existe!");
             }
         } else {
-            sender.sendMessage(ChatColor.RED + "Eror al encontrar el mundo!");
+            sender.sendMessage(ChatColor.RED + "Error al encontrar el mundo!");
         }
         return true;
     }
@@ -105,6 +118,7 @@ public class Spleef implements CommandExecutor {
             }
         };
     }
+
 }
 
 

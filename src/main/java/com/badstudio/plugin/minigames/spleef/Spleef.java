@@ -41,11 +41,8 @@ public class Spleef implements CommandExecutor {
             int x1m1 = (plugin.getConfig().getInt("spleef.pos1Mapa1.x1")), y1m1 = (plugin.getConfig().getInt("spleef.pos1Mapa1.y1")), z1m1=(plugin.getConfig().getInt("spleef.pos1Mapa1.z1")), x2m1 = (plugin.getConfig().getInt("spleef.pos2Mapa1.x2")), y2m1 = (plugin.getConfig().getInt("spleef.pos2Mapa1.y2")), z2m1 = (plugin.getConfig().getInt("spleef.pos2Mapa1.z2"));
 
             if (mundo != null) {
-                plugin.getMapaManager().guardarMapa(mundo, x1m1, y1m1, z1m1, x2m1, y2m1, z2m1, "Spleef");
+
                 Inicio(mundo, x1, y1, z1, x2, y2, z2);
-                Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                    plugin.getMapaManager().cargarMapa(mundo, x1m1, y1m1, z1m1, "Spleef");
-                }, 20 * 180L);
             } else {
                 Bukkit.getLogger().warning("¡El mundo especificado no existe!");
             }

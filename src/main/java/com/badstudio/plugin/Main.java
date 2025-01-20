@@ -4,7 +4,6 @@ import com.badstudio.plugin.commands.StriveTabCompleter;
 import com.badstudio.plugin.listeners.Events;
 import com.badstudio.plugin.minigames.spleef.Spleef;
 import com.badstudio.plugin.minigames.spleef.LaPala;
-import com.badstudio.plugin.utils.GuardarYCargarMapa;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.badstudio.plugin.commands.StriveComandos;
@@ -14,7 +13,6 @@ import org.bukkit.Bukkit;
 public final class Main extends JavaPlugin {
 
     private Config config;
-    private GuardarYCargarMapa mapaManager;
 
     @Override
     public void onEnable() {
@@ -24,7 +22,6 @@ public final class Main extends JavaPlugin {
         //Registro de la config
         config = new Config(this);
 
-        this.mapaManager = new GuardarYCargarMapa(this);
 
         //Registro de comandos
         getCommand("strive").setExecutor(new StriveComandos(this));
@@ -42,9 +39,6 @@ public final class Main extends JavaPlugin {
         getLogger().info("El plugin ha sido deshabilitado");
     }
 
-    public GuardarYCargarMapa getMapaManager() {
-        return mapaManager;
-    }
 
     public Config getConfigs() {
         return config;

@@ -36,8 +36,8 @@ public class GuardarYCargarMapa {
         // Crea el clipboard
         BlockArrayClipboard clipboard = new BlockArrayClipboard(region);
 
-        // Define el archivo .schematic
-        File archivo = new File(plugin.getDataFolder(), nombreArchivo + ".schematic");
+        // Define el archivo .schem
+        File archivo = new File(plugin.getDataFolder(), nombreArchivo + ".schem");
 
         // Asegúrate de que la carpeta del plugin existe
         if (!plugin.getDataFolder().exists()) {
@@ -47,12 +47,12 @@ public class GuardarYCargarMapa {
         try (EditSession editSession = WorldEdit.getInstance().newEditSession(weWorld);
              FileOutputStream fos = new FileOutputStream(archivo)) {
 
-            // Fuerza el uso del formato SCHEMATIC
-            ClipboardFormat formato = ClipboardFormats.findByAlias("schematic");
+            // Encuentra el formato válido basado en el archivo
+            ClipboardFormat formato = ClipboardFormats.findByFile(archivo);
 
             // Verifica si el formato es válido
             if (formato == null) {
-                Bukkit.getLogger().severe("El formato SCHEMATIC no está soportado en esta versión de WorldEdit.");
+                Bukkit.getLogger().severe("No se pudo encontrar un formato válido para el archivo: " + archivo.getName());
                 return;
             }
 
@@ -63,6 +63,7 @@ public class GuardarYCargarMapa {
             e.printStackTrace();
         }
     }
+
 
     public void cargarMapa(org.bukkit.World bukkitWorld, int x, int y, int z, String nombreArchivo) {
         // Define el archivo .schematic

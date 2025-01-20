@@ -63,7 +63,7 @@ public class StriveComandos implements CommandExecutor {
             List<Player> JugadoresEliminados = Jugadores.subList(maximoJugadores, Jugadores.size());
 
             int delay = 0;
-            int intervalo = 10;
+            int intervalo = 15;
 
             for (Player Jugador : JugadoresEliminados) {
                 Bukkit.getScheduler().runTaskLater(plugin, () -> {

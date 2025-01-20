@@ -61,22 +61,23 @@ public class Spleef implements CommandExecutor {
                 tiempoRestante[0]--;
 
                 // Muestra la cuenta regresiva a todos los jugadores
-                for (Player jugador : mundo.getPlayers()) {
-                    jugador.sendTitle(ChatColor.RED + "" + ChatColor.BOLD +tiempoRestante[0],"", 5, 10, 5);
-                    jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_HAT, 1, 1);
+                if(tiempoRestante[0] > 0) {
+                    for (Player jugador : mundo.getPlayers()) {
+                        jugador.sendTitle(ChatColor.RED + "" + ChatColor.BOLD + tiempoRestante[0], "", 5, 10, 5);
+                        jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_HAT, 1, 1);
+                    }
                 }
 
-                // Cuando el tiempo llegue a 0, destruye los bloques y cancela la tarea
-                if (tiempoRestante[0] <= 0) {
-                    for (Player jugador : mundo.getPlayers()){
+
+                if (tiempoRestante[0] == 1) {
+                    for (Player jugador : mundo.getPlayers()) {
                         jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_BIT, 1, 2);
-                        jugador.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20*3, 0));
-                        Bukkit.getScheduler().runTaskLater(plugin, palaSpleef(jugador), 20*3L);
+                        jugador.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 3, 0));
+                        Bukkit.getScheduler().runTaskLater(plugin, palaSpleef(jugador), 20 * 3L);
                     }
 
                     destruirBloques(mundo, x1, y1, z1, x2, y2, z2);
 
-                    // Cancela la tarea
                     cancel();
                 }
             }

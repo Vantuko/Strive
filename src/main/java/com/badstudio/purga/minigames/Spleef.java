@@ -6,6 +6,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -68,6 +71,7 @@ public class Spleef implements CommandExecutor {
                     for (Player jugador : mundo.getPlayers()){
                         jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_BIT, 1, 2);
                         jugador.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20*3, 0));
+                        Bukkit.getScheduler().runTaskLater(plugin, palaSpleef(jugador), 20*3L);
                     }
 
                     destruirBloques(mundo, x1, y1, z1, x2, y2, z2);
@@ -96,6 +100,21 @@ public class Spleef implements CommandExecutor {
                 }
             }
         }
+    }
+
+    private Runnable palaSpleef(Player player){
+        return new Runnable() {
+            @Override
+            public void run() {
+                Inventory playerInventory = player.getInventory();
+                ItemStack palaMadera = new ItemStack(Material.WOODEN_SHOVEL);
+                ItemMeta metaPalaMadera = palaMadera.getItemMeta();
+
+
+                palaMadera.setItemMeta(metaPalaMadera);
+                playerInventory.setItem(0, palaMadera);
+            }
+        };
     }
 }
 

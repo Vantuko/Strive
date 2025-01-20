@@ -84,6 +84,9 @@ public class Comandos implements CommandExecutor {
                         if(jugador.hasPotionEffect(PotionEffectType.LEVITATION)){
                             jugador.removePotionEffect(PotionEffectType.LEVITATION);
                         }
+                        if(jugador.isOnline()){
+                            jugador.playSound(jugador, Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+                        }
                     }
                 }
                 player.sendMessage(ChatColor.GREEN + "La purga se ha completado. " + maximoJugadores + " jugadores restantes.");
@@ -101,7 +104,7 @@ public class Comandos implements CommandExecutor {
         Firework firework = (Firework) world.spawnEntity(locPlayer, EntityType.FIREWORK_ROCKET);
         FireworkMeta fireworkMeta = firework.getFireworkMeta();
         FireworkEffect efecto = FireworkEffect.builder()
-                .with(FireworkEffect.Type.BURST)
+                .with(FireworkEffect.Type.BALL_LARGE)
                 .withColor(Color.fromRGB(11743532))
                 .withFade(Color.fromRGB(11743532))
                 .trail(true)

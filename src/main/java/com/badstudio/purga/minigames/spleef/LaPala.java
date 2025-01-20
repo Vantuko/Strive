@@ -1,6 +1,5 @@
 package com.badstudio.purga.minigames.spleef;
 
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -15,7 +14,7 @@ public class LaPala implements Listener {
     public void OnBreakSnow(BlockBreakEvent e) {
         World mundo = Bukkit.getWorld("Spleef");
 
-        if (mundo != null) {
+        if (mundo != null && e.getBlock().getWorld().equals(mundo)) {
             if (e.getBlock().getType() == Material.SNOW_BLOCK) {
                 e.setDropItems(false);
             }

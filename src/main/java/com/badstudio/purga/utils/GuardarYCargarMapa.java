@@ -9,7 +9,6 @@ import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.session.ClipboardHolder;
-import com.sk89q.worldedit.world.World;
 import org.bukkit.Bukkit;
 
 import java.io.File;
@@ -40,7 +39,7 @@ public class GuardarYCargarMapa {
 
         File archivo = new File(plugin.getDataFolder(), nombreArchivo + ".schem");
         try (EditSession editSession = WorldEdit.getInstance().newEditSession(weWorld);
-             FileOutputStream fos = new FileOutputStream(archivo)) { // Usa FileOutputStream
+             FileOutputStream fos = new FileOutputStream(archivo)) {
             ClipboardFormats.findByFile(archivo).getWriter(fos).write(clipboard);
         } catch (IOException e) {
             e.printStackTrace();
@@ -49,7 +48,6 @@ public class GuardarYCargarMapa {
 
     public void cargarMapa(org.bukkit.World mundo, int x, int y, int z, String nombreArchivo) {
         File archivo = new File(plugin.getDataFolder(), nombreArchivo + ".schem");
-
 
         if (!archivo.exists()) {
             Bukkit.getLogger().warning("El archivo " + nombreArchivo + ".schem no existe.");

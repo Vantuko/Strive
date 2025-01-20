@@ -6,6 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 
 public class Spleef implements CommandExecutor {
@@ -35,7 +36,6 @@ public class Spleef implements CommandExecutor {
 
         if (mundo != null) {
             Inicio(mundo, x1, y1, z1, x2, y2, z2);
-            player.sendMessage("Se a ejecutado correctamente!");
         } else {
             Bukkit.getLogger().warning("¡El mundo especificado no existe!");
 
@@ -44,6 +44,40 @@ public class Spleef implements CommandExecutor {
     }
 
     private void Inicio(World mundo, int x1, int y1, int z1, int x2, int y2, int z2) {
+        // Define la duración de la cuenta regresiva (en segundos)
+        final int[] tiempoRestante = {plugin.getConfig().getInt("spleef.duracionInicio")}; // Cambia a la duración deseada
+
+
+        // Programa una tarea repetitiva para la cuenta regresiva
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                // Reduce el tiempo restante
+                tiempoRestante[0]--;
+
+                // Muestra la cuenta regresiva a todos los jugadores
+                for (Player jugador : mundo.getPlayers()) {
+                    jugador.sendTitle(ChatColor.RED + "" + ChatColor.BOLD +tiempoRestante[0],"", 5, 10, 5);
+                    jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_HAT, 1, 1);
+                }
+
+                // Cuando el tiempo llegue a 1, destruye los bloques y cancela la tarea
+                if (tiempoRestante[0] <= 1) {
+                    for (Player jugador : mundo.getPlayers()){
+                        jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_BIT, 1, 2);
+                    }
+
+                    destruirBloques(mundo, x1, y1, z1, x2, y2, z2);
+
+                    // Cancela la tarea
+                    cancel();
+                }
+            }
+        }.runTaskTimer(plugin, 0L, 20L); // Ejecuta cada 20 ticks (1 segundo)
+    }
+
+    // Método para destruir los bloques
+    private void destruirBloques(World mundo, int x1, int y1, int z1, int x2, int y2, int z2) {
         int minX = Math.min(x1, x2);
         int maxX = Math.max(x1, x2);
         int minY = Math.min(y1, y2);

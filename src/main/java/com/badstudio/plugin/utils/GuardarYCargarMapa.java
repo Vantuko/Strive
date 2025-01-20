@@ -1,6 +1,6 @@
-package com.badstudio.purga.utils;
+package com.badstudio.plugin.utils;
 
-import com.badstudio.purga.Main;
+import com.badstudio.plugin.Main;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;

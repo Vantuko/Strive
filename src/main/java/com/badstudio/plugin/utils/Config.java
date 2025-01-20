@@ -1,4 +1,4 @@
-package com.badstudio.purga.utils;
+package com.badstudio.plugin.utils;
 
 import org.bukkit.plugin.java.JavaPlugin;
 

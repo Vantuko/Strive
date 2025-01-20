@@ -1,4 +1,4 @@
-package com.badstudio.purga.minigames.spleef;
+package com.badstudio.plugin.minigames.spleef;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

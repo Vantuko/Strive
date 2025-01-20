@@ -1,14 +1,14 @@
-package com.badstudio.purga;
+package com.badstudio.plugin;
 
-import com.badstudio.purga.commands.StriveTabCompleter;
-import com.badstudio.purga.listeners.Events;
-import com.badstudio.purga.minigames.spleef.Spleef;
-import com.badstudio.purga.minigames.spleef.LaPala;
-import com.badstudio.purga.utils.GuardarYCargarMapa;
+import com.badstudio.plugin.commands.StriveTabCompleter;
+import com.badstudio.plugin.listeners.Events;
+import com.badstudio.plugin.minigames.spleef.Spleef;
+import com.badstudio.plugin.minigames.spleef.LaPala;
+import com.badstudio.plugin.utils.GuardarYCargarMapa;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import com.badstudio.purga.commands.StriveComandos;
-import com.badstudio.purga.utils.Config;
+import com.badstudio.plugin.commands.StriveComandos;
+import com.badstudio.plugin.utils.Config;
 import org.bukkit.Bukkit;
 
 public final class Main extends JavaPlugin {

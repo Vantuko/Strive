@@ -1,4 +1,4 @@
-package com.badstudio.purga.listeners;
+package com.badstudio.plugin.listeners;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;

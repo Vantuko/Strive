@@ -1,6 +1,6 @@
-package com.badstudio.purga.commands;
+package com.badstudio.plugin.commands;
 
-import com.badstudio.purga.Main;
+import com.badstudio.plugin.Main;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

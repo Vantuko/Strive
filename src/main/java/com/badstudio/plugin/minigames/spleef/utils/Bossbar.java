@@ -20,7 +20,7 @@ public class Bossbar {
     public Bossbar(JavaPlugin plugin, String title, int tiempoInicial) {
         this.plugin = plugin;
         this.tiempoInicial = tiempoInicial;
-        this.tiempoRestante = tiempoInicial;
+        this.tiempoRestante = plugin.getConfig().getInt("spleef.duracionJuego");
         this.bossbar = Bukkit.createBossBar(
                 ChatColor.AQUA + title + Tiempo(tiempoRestante),
                 BarColor.BLUE,

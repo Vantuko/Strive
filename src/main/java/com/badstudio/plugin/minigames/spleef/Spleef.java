@@ -2,6 +2,7 @@ package com.badstudio.plugin.minigames.spleef;
 
 import com.badstudio.plugin.Main;
 import com.badstudio.plugin.utils.GuardarMapa;
+import com.badstudio.plugin.minigames.spleef.utils.Bossbar;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,6 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class Spleef implements CommandExecutor {
     private final Main plugin;
     private final GuardarMapa guardarMapa = new GuardarMapa();
+    private Bossbar bossbar;
     private static boolean juegoActivo = false; // Estado compartido del juego
 
     public Spleef(Main plugin) {
@@ -71,37 +73,42 @@ public class Spleef implements CommandExecutor {
     }
 
     private void Inicio(World mundo, int x1, int y1, int z1, int x2, int y2, int z2) {
-        final int[] tiempoRestante = {plugin.getConfig().getInt("spleef.duracionInicio")};
+        final int tiempoTotal = plugin.getConfig().getInt("spleef.duracionInicio");
+        bossbar = new Bossbar(plugin, "Tiempo restante para reconstruir: ", tiempoTotal);
+        bossbar.Inicio();
 
         new BukkitRunnable() {
+            private int tiempoRestante = tiempoTotal;
+
             @Override
             public void run() {
-                tiempoRestante[0]--;
+                tiempoRestante--;
 
-                if (tiempoRestante[0] > 0) {
+                if (tiempoRestante > 0) {
                     for (Player jugador : mundo.getPlayers()) {
-                        jugador.sendTitle(ChatColor.RED + "" + ChatColor.BOLD + tiempoRestante[0], "", 5, 10, 5);
+                        jugador.sendTitle(ChatColor.RED + "" + ChatColor.BOLD + tiempoRestante, "", 5, 10, 5);
                         jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_HAT, 1, 1);
                     }
                 }
-                if (tiempoRestante[0] == 0) {
+
+                if (tiempoRestante == 0) {
                     for (Player jugador : mundo.getPlayers()) {
                         jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_BIT, 1, 2);
                         jugador.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 3, 0));
-                        Bukkit.getScheduler().runTaskLater(plugin, () -> darPala(jugador), 20*3L);
+                        Bukkit.getScheduler().runTaskLater(plugin, () -> darPala(jugador), 20 * 3L);
                     }
 
                     destruirBloques(mundo, x1, y1, z1, x2, y2, z2);
 
                     Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                        for(Player jugador : mundo.getPlayers()) {
-                            jugador.sendMessage("va a terminar");
+                        for (Player jugador : mundo.getPlayers()) {
+                            jugador.sendMessage("Va a terminar");
                         }
                     }, 14 * 180L);
 
                     Bukkit.getScheduler().runTaskLater(plugin, () -> {
                         setJuegoActivo(false);
-                        for(Player jugador : mundo.getPlayers()){
+                        for (Player jugador : mundo.getPlayers()) {
                             Inventory inventory = jugador.getInventory();
 
                             for (ItemStack item : inventory.getContents()) {
@@ -114,6 +121,7 @@ public class Spleef implements CommandExecutor {
                         }
                         guardarMapa.restaurarMapa(mundo);
                         guardarMapa.limpiarDatos();
+                        bossbar.Finalizacion();
                     }, 20 * 180L);
 
                     cancel();
@@ -140,7 +148,7 @@ public class Spleef implements CommandExecutor {
         }
     }
 
-    private void darPala(Player player){
+    private void darPala(Player player) {
         player.getInventory().setItem(0, new ItemStack(Material.WOODEN_SHOVEL));
     }
 
@@ -155,11 +163,10 @@ public class Spleef implements CommandExecutor {
                         "-------------------------");
 
         for (Player jugador : Bukkit.getOnlinePlayers()) {
-            if(jugador.getWorld().getName().equalsIgnoreCase("Spleef")){
+            if (jugador.getWorld().getName().equalsIgnoreCase("Spleef")) {
                 jugador.sendMessage(mensaje);
             }
         }
     }
-
-
 }
+

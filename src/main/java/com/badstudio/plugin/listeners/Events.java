@@ -12,6 +12,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffectType;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,11 +46,12 @@ public class Events implements Listener{
             Player player = e.getEntity();
             World mundo = player.getWorld();
             List<Player> jugadores = new ArrayList<>(Bukkit.getOnlinePlayers());
+            e.setDeathMessage(null);
 
             if(mundo != null && mundo.getName().equalsIgnoreCase("Spleef")){
                 for(Player jugador : jugadores){
                     if(jugador.getWorld().getName().equalsIgnoreCase("Spleef")){
-                        jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c¡El jugador &f" + player + " &cha caido de la arena!"));
+                        jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c¡El jugador &f" + player.getName() + " &cha caido de la arena!"));
                     }
                 }
             }

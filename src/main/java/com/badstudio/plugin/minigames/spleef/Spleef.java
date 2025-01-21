@@ -155,11 +155,11 @@ public class Spleef implements CommandExecutor {
     private void mostrarMensajeSpleef() {
         String mensaje = ChatColor.translateAlternateColorCodes('&',
                 "------------\n" +
-                        "[&#CAE3E6❄&f] &#CAE3E6Spleef &f[&#CAE3E6❄&f]\n" +
-                        "&#CAE3E6Trabaja con tu equipo para\n" +
-                        "&#CAE3E6romper los bloques bajo tus\n" +
-                        "&#CAE3E6oponentes y quedar ultimo en pie\n" +
-                        "&f&l¡&#CAE3E6Demuestra que equipo es mejor&f&l!\n" +
+                        net.md_5.bungee.api.ChatColor.of("#CAE3E6")+"[❄&f] "+net.md_5.bungee.api.ChatColor.of("#CAE3E6") + "Spleef " + net.md_5.bungee.api.ChatColor.of("#CAE3E6") + "&f[❄&f]\n" +
+                        net.md_5.bungee.api.ChatColor.of("#CAE3E6")+"Trabaja con tu equipo para\n" +
+                        net.md_5.bungee.api.ChatColor.of("#CAE3E6")+"romper los bloques bajo tus\n" +
+                        net.md_5.bungee.api.ChatColor.of("#CAE3E6")+"oponentes y quedar ultimo en pie\n" +
+                        "&f&l¡"+ net.md_5.bungee.api.ChatColor.of("#CAE3E6") +"Demuestra que equipo es mejor&f&l!\n" +
                         "-------------------------");
 
         for (Player jugador : Bukkit.getOnlinePlayers()) {

@@ -13,6 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -152,7 +153,11 @@ public class Spleef implements CommandExecutor {
     }
 
     private void darPala(Player player) {
-        player.getInventory().setItem(0, new ItemStack(Material.WOODEN_SHOVEL));
+        ItemStack palaMadera = new ItemStack(Material.WOODEN_SHOVEL);
+        ItemMeta palaMaderaMeta = palaMadera.getItemMeta();
+        palaMaderaMeta.setUnbreakable(true);
+        palaMadera.setItemMeta(palaMaderaMeta);
+        player.getInventory().setItem(0, palaMadera);
     }
 
     private void mostrarMensajeSpleef() {

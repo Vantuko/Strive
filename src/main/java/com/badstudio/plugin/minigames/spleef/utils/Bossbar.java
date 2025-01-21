@@ -62,6 +62,6 @@ public class Bossbar {
     private String Tiempo(int segundos) {
         int minutos = segundos / 60;
         int seg = segundos % 60;
-        return String.format("%02d:%02d", minutos, segundos);
+        return String.format("%02d:%02d", minutos, seg);
     }
 }

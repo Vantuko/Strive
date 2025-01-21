@@ -23,5 +23,6 @@ spleef:
     x2: -30
     y2: 200
     z2: -30
-  duracionInicio: 11 #No se incluye el último número Ej. Pones 10 pero empieza en 9
+  duracionInicio: 11 # (Segundos) No se incluye el último número Ej. Pones 10 pero empieza en 9
+  duracionJuego: 180 # (Segundos) No incluyas la duracion del inicio
 

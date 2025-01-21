@@ -81,13 +81,7 @@ public class LaPala implements Listener {
         Material siguientePala = null;
 
         switch (palaActual.getType()) {
-            case WOODEN_SHOVEL:
-                siguientePala = Material.STONE_SHOVEL;
-                break;
             case STONE_SHOVEL:
-                siguientePala = Material.IRON_SHOVEL;
-                break;
-            case IRON_SHOVEL:
                 siguientePala = Material.DIAMOND_SHOVEL;
                 break;
             case DIAMOND_SHOVEL:

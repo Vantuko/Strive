@@ -31,7 +31,7 @@ public final class Main extends JavaPlugin {
         //Registro de eventos
         PluginManager pm = Bukkit.getServer().getPluginManager();
         pm.registerEvents(new Events(), this);
-        pm.registerEvents(new LaPala(this), this);
+        pm.registerEvents(new LaPala(), this);
     }
 
     @Override

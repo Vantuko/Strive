@@ -7,9 +7,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -52,7 +49,15 @@ public class Spleef implements CommandExecutor {
             int y2 = plugin.getConfig().getInt("spleef.pos2.y2");
             int z2 = plugin.getConfig().getInt("spleef.pos2.z2");
 
+            int x3 = plugin.getConfig().getInt("spleef.pos3.x1");
+            int y3 = plugin.getConfig().getInt("spleef.pos3.y1");
+            int z3 = plugin.getConfig().getInt("spleef.pos3.z1");
+            int x4 = plugin.getConfig().getInt("spleef.pos4.x2");
+            int y4 = plugin.getConfig().getInt("spleef.pos4.y2");
+            int z4 = plugin.getConfig().getInt("spleef.pos4.z2");
+
             if (mundo != null) {
+                guardarMapa.guardarMapa(mundo, x3, y3, z3, x4, y4, z4);
                 Inicio(mundo, x1, y1, z1, x2, y2, z2);
             } else {
                 Bukkit.getLogger().warning("¡El mundo especificado no existe!");
@@ -88,6 +93,8 @@ public class Spleef implements CommandExecutor {
 
                     Bukkit.getScheduler().runTaskLater(plugin, () -> {
                         setJuegoActivo(false);
+                        guardarMapa.restaurarMapa(mundo);
+                        guardarMapa.limpiarDatos();
                     }, 20 * 180L);
 
                     cancel();

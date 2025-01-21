@@ -1,6 +1,5 @@
 package com.badstudio.plugin.minigames.spleef;
 
-import com.badstudio.plugin.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -25,11 +24,6 @@ public class LaPala implements Listener {
 
     private final HashMap<UUID, Integer> bloquesDestruidos = new HashMap<>();
     private static final int finalBlock = 20;
-    private final Main plugin;
-
-    public LaPala(Main plugin) {
-        this.plugin = plugin;
-    }
 
     @EventHandler
     public void onBreakSnow(BlockBreakEvent e) {

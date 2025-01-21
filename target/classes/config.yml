@@ -16,12 +16,12 @@ spleef:
     z2: -7
 #Coordenadas de la restauración del mapa
   pos3:
-    x1: 150
-    y1: 64
-    z1: 150
+    x1: 30
+    y1: 0
+    z1: 30
   pos4:
-    x2: 170
-    y2: 64
-    z2: 170
+    x2: -30
+    y2: 200
+    z2: -30
   duracionInicio: 11 #No se incluye el último número Ej. Pones 10 pero empieza en 9
 

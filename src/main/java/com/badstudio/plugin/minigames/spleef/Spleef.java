@@ -61,6 +61,7 @@ public class Spleef implements CommandExecutor {
 
             if (mundo != null) {
                 guardarMapa.guardarMapa(mundo, x3, y3, z3, x4, y4, z4);
+                mostrarMensajeSpleef();
                 Inicio(mundo, x1, y1, z1, x2, y2, z2);
             } else {
                 Bukkit.getLogger().warning("¡El mundo especificado no existe!");
@@ -94,6 +95,11 @@ public class Spleef implements CommandExecutor {
 
                     destruirBloques(mundo, x1, y1, z1, x2, y2, z2);
 
+                    Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                        for(Player jugador : mundo.getPlayers()) {
+                            jugador.sendMessage("va a terminar");
+                        }
+                    }, 14 * 180L);
 
                     Bukkit.getScheduler().runTaskLater(plugin, () -> {
                         setJuegoActivo(false);
@@ -139,4 +145,23 @@ public class Spleef implements CommandExecutor {
     private void darPala(Player player){
         player.getInventory().setItem(0, new ItemStack(Material.WOODEN_SHOVEL));
     }
+
+    private void mostrarMensajeSpleef() {
+        String mensaje = ChatColor.translateAlternateColorCodes('&',
+                "------------\n" +
+                        "[&#CAE3E6❄&f] &#CAE3E6Spleef &f[&#CAE3E6❄&f]\n" +
+                        "&#CAE3E6Trabaja con tu equipo para\n" +
+                        "&#CAE3E6romper los bloques bajo tus\n" +
+                        "&#CAE3E6oponentes y quedar ultimo en pie\n" +
+                        "&f&l¡&#CAE3E6Demuestra que equipo es mejor&f&l!\n" +
+                        "-------------------------");
+
+        for (Player jugador : Bukkit.getOnlinePlayers()) {
+            if(jugador.getWorld().getName().equalsIgnoreCase("Spleef")){
+                jugador.sendMessage(mensaje);
+            }
+        }
+    }
+
+
 }

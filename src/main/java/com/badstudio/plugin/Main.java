@@ -3,7 +3,7 @@ package com.badstudio.plugin;
 import com.badstudio.plugin.commands.StriveTabCompleter;
 import com.badstudio.plugin.listeners.Events;
 import com.badstudio.plugin.minigames.spleef.Spleef;
-import com.badstudio.plugin.minigames.spleef.LaPala;
+import com.badstudio.plugin.minigames.spleef.listeners.LaPala;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.badstudio.plugin.commands.StriveComandos;

@@ -7,6 +7,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -37,7 +39,6 @@ public class Spleef implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "Este comando solo puede ser ejecutado por un jugador.");
                 return true;
             }
-            Player player = (Player) sender;
 
             // Cambia el estado del juego a activo
             setJuegoActivo(true);
@@ -86,6 +87,7 @@ public class Spleef implements CommandExecutor {
                     for (Player jugador : mundo.getPlayers()) {
                         jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_BIT, 1, 2);
                         jugador.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 3, 0));
+                        Bukkit.getScheduler().runTaskLater(plugin, () -> darPala(jugador), 20*3L);
                     }
 
                     destruirBloques(mundo, x1, y1, z1, x2, y2, z2);
@@ -119,5 +121,9 @@ public class Spleef implements CommandExecutor {
                 }
             }
         }
+    }
+
+    private void darPala(Player player){
+        player.getInventory().setItemInMainHand(new ItemStack(Material.WOODEN_SHOVEL));
     }
 }

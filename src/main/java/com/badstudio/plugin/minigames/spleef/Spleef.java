@@ -1,9 +1,12 @@
 package com.badstudio.plugin.minigames.spleef;
 
 import com.badstudio.plugin.Main;
-import com.badstudio.plugin.utils.GuardarMapa;
 import com.badstudio.plugin.minigames.spleef.utils.Bossbar;
+import com.badstudio.plugin.utils.GuardarMapa;
 import org.bukkit.*;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -104,7 +107,7 @@ public class Spleef implements CommandExecutor {
                         for (Player jugador : mundo.getPlayers()) {
                             jugador.sendMessage("Va a terminar");
                         }
-                    }, 14 * 180L);
+                    }, 14 * (plugin.getConfig().getLong("spleef.duracionJuego")));
 
                     Bukkit.getScheduler().runTaskLater(plugin, () -> {
                         setJuegoActivo(false);
@@ -122,7 +125,7 @@ public class Spleef implements CommandExecutor {
                         guardarMapa.restaurarMapa(mundo);
                         guardarMapa.limpiarDatos();
                         bossbar.Finalizacion();
-                    }, 20 * 180L);
+                    }, 20 * (plugin.getConfig().getLong("spleef.duracionJuego")));
 
                     cancel();
                 }

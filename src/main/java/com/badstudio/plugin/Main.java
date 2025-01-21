@@ -13,7 +13,6 @@ import org.bukkit.Bukkit;
 public final class Main extends JavaPlugin {
 
     private Config config;
-    private boolean juegoActivo = false;
 
     @Override
     public void onEnable() {
@@ -40,9 +39,6 @@ public final class Main extends JavaPlugin {
         getLogger().info("El plugin ha sido deshabilitado");
     }
 
-    public boolean isJuegoActivo() {
-        return juegoActivo;
-    }
     public Config getConfigs() {
         return config;
     }

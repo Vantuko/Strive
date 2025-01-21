@@ -42,16 +42,9 @@ public class Spleef implements CommandExecutor {
             }
             Player player = (Player) sender;
 
-            if (juegoActivo) {
-                player.sendMessage(ChatColor.RED + "¡El juego ya está activo!");
-                return true;
-            }
-
             // Cambia el estado del juego a activo
             setJuegoActivo(true);
-            player.sendMessage(ChatColor.GREEN + "¡El juego de Spleef ha comenzado!");
 
-            // Cargar posiciones desde la configuración
             int x1 = plugin.getConfig().getInt("spleef.pos1.x1");
             int y1 = plugin.getConfig().getInt("spleef.pos1.y1");
             int z1 = plugin.getConfig().getInt("spleef.pos1.z1");
@@ -92,11 +85,10 @@ public class Spleef implements CommandExecutor {
 
                     destruirBloques(mundo, x1, y1, z1, x2, y2, z2);
 
-                    // Desactiva el juego después de 3 minutos
+
                     Bukkit.getScheduler().runTaskLater(plugin, () -> {
                         setJuegoActivo(false);
-                        Bukkit.broadcastMessage(ChatColor.RED + "¡El juego de Spleef ha terminado!");
-                    }, 20 * 180L); // 3 minutos en ticks
+                    }, 20 * 180L);
 
                     cancel();
                 }

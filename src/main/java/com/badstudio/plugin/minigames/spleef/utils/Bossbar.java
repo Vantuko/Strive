@@ -13,11 +13,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class Bossbar {
     private final BossBar bossbar;
     private final JavaPlugin plugin;
+    private final int tiempoInicial;
     private int tiempoRestante;
     private BukkitRunnable task;
 
     public Bossbar(JavaPlugin plugin, String title, int tiempoInicial) {
         this.plugin = plugin;
+        this.tiempoInicial = tiempoInicial;
         this.tiempoRestante = tiempoInicial;
         this.bossbar = Bukkit.createBossBar(
                 ChatColor.AQUA + title + Tiempo(tiempoRestante),
@@ -43,7 +45,7 @@ public class Bossbar {
                 }
 
                 bossbar.setTitle(ChatColor.AQUA + "Tiempo restante: " + Tiempo(tiempoRestante));
-                bossbar.setProgress((double) tiempoRestante / bossbar.getProgress());
+                bossbar.setProgress((double) tiempoRestante / tiempoInicial);
                 tiempoRestante--;
             }
         };

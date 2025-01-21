@@ -40,7 +40,7 @@ public class StriveComandos implements CommandExecutor {
                 break;
             case "reload":
                 plugin.reloadConfig();
-                player.sendMessage(ChatColor.GREEN+"Configuración reiniciada");
+                player.sendMessage(ChatColor.GREEN + "Configuración reiniciada");
                 break;
             default:
                 player.sendMessage(ChatColor.RED + "Comando desconocido, utiliza /strive");

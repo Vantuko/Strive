@@ -6,8 +6,10 @@ import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -95,6 +97,17 @@ public class Spleef implements CommandExecutor {
 
                     Bukkit.getScheduler().runTaskLater(plugin, () -> {
                         setJuegoActivo(false);
+                        for(Player jugador : mundo.getPlayers()){
+                            Inventory inventory = jugador.getInventory();
+
+                            for (ItemStack item : inventory.getContents()) {
+                                if (item != null && (item.getType() == Material.WOODEN_SHOVEL
+                                        || item.getType() == Material.IRON_SHOVEL
+                                        || item.getType() == Material.DIAMOND_SHOVEL)) {
+                                    inventory.remove(item);
+                                }
+                            }
+                        }
                         guardarMapa.restaurarMapa(mundo);
                         guardarMapa.limpiarDatos();
                     }, 20 * 180L);
@@ -124,6 +137,6 @@ public class Spleef implements CommandExecutor {
     }
 
     private void darPala(Player player){
-        player.getInventory().setItemInMainHand(new ItemStack(Material.WOODEN_SHOVEL));
+        player.getInventory().setItem(0, new ItemStack(Material.WOODEN_SHOVEL));
     }
 }

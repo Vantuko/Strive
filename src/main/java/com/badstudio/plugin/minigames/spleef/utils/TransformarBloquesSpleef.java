@@ -1,14 +1,11 @@
 package com.badstudio.plugin.minigames.spleef.utils;
 
 import com.badstudio.plugin.Main;
-import net.minecraft.network.protocol.game.PacketPlayOutBlockBreakAnimation;
-import net.minecraft.core.BlockPosition;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;

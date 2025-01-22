@@ -84,12 +84,13 @@ public class LaPala implements Listener {
         switch (palaActual.getType()) {
             case STONE_SHOVEL:
                 siguientePala = Material.DIAMOND_SHOVEL;
+                jugador.playSound(jugador.getLocation(), Sound.ENTITY_ITEM_BREAK, 0.27F, 1);
                 break;
             case DIAMOND_SHOVEL:
                 int eficienciaActual = palaActual.getEnchantmentLevel(Enchantment.EFFICIENCY);
                 if (eficienciaActual < 5) {
                     agregarEficiencia(palaActual, eficienciaActual + 1);
-                    jugador.playSound(jugador.getLocation(), Sound.ENTITY_ITEM_BREAK, 0.3F, 1);
+                    jugador.playSound(jugador.getLocation(), Sound.ENTITY_ITEM_BREAK, 0.27F, 1);
                 }
                 return;
         }

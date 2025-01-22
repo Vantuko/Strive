@@ -2,6 +2,7 @@ package com.badstudio.plugin.minigames.spleef;
 
 import com.badstudio.plugin.Main;
 import com.badstudio.plugin.minigames.spleef.utils.Bossbar;
+import com.badstudio.plugin.minigames.spleef.utils.TransformacionRepetitiva;
 import com.badstudio.plugin.minigames.spleef.utils.TransformarBloquesSpleef;
 import com.badstudio.plugin.utils.GuardarMapa;
 
@@ -19,15 +20,22 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
+import static org.bukkit.Bukkit.getLogger;
+
 public class Spleef implements CommandExecutor {
     private final Main plugin;
     private final GuardarMapa guardarMapa = new GuardarMapa();
     private Bossbar bossbar;
     private static boolean juegoActivo = false;
-    TransformarBloquesSpleef transformarBloques = new TransformarBloquesSpleef(this);
+    private final TransformarBloquesSpleef transformarBloques;
+    private final TransformacionRepetitiva transformacionRepetitiva;
 
     public Spleef(Main plugin) {
         this.plugin = plugin;
+        this.transformarBloques = new TransformarBloquesSpleef(plugin);
+        this.transformacionRepetitiva = new TransformacionRepetitiva(plugin);
     }
 
     public static boolean isJuegoActivo() {
@@ -42,7 +50,7 @@ public class Spleef implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         World mundo = Bukkit.getWorld("Spleef");
 
-        if (Bukkit.getWorlds().contains(mundo)) {
+        if (mundo != null && Bukkit.getWorlds().contains(mundo)) {
             if (!(sender instanceof Player)) {
                 sender.sendMessage(ChatColor.RED + "Este comando solo puede ser ejecutado por un jugador.");
                 return true;
@@ -65,26 +73,26 @@ public class Spleef implements CommandExecutor {
             int y4 = plugin.getConfig().getInt("spleef.pos4.y2");
             int z4 = plugin.getConfig().getInt("spleef.pos4.z2");
 
-            if (mundo != null) {
-                guardarMapa.guardarMapa(mundo, x3, y3, z3, x4, y4, z4);
-                mostrarMensajeSpleef();
-                Inicio(mundo, x1, y1, z1, x2, y2, z2);
-            } else {
-                Bukkit.getLogger().warning("¡El mundo especificado no existe!");
-            }
+            guardarMapa.guardarMapa(mundo, x3, y3, z3, x4, y4, z4);
+            mostrarMensajeSpleef();
+            inicio(mundo, x1, y1, z1, x2, y2, z2);
         } else {
             sender.sendMessage(ChatColor.RED + "Error al encontrar el mundo!");
         }
         return true;
     }
 
-    private void Inicio(World mundo, int x1, int y1, int z1, int x2, int y2, int z2) {
-        final int tiempoTotal = plugin.getConfig().getInt("spleef.duracionInicio");
-        bossbar = new Bossbar(plugin, "Tiempo restante para reconstruir: ", tiempoTotal);
-        bossbar.Inicio();
+    private void inicio(World mundo, int x1, int y1, int z1, int x2, int y2, int z2) {
+        final int tiempoTotal = plugin.getConfig().getInt("spleef.duracionJuego");
 
         new BukkitRunnable() {
-            private int tiempoRestante = tiempoTotal;
+            private int tiempoRestante = plugin.getConfig().getInt("spleef.duracionInicio");
+            private final List<TransformacionRepetitiva.CoordenadaRadio> configuraciones = List.of(
+                    new TransformacionRepetitiva.CoordenadaRadio(0, 139, 0, 11),
+                    new TransformacionRepetitiva.CoordenadaRadio(0, 138, 0, 3),
+                    new TransformacionRepetitiva.CoordenadaRadio(0, 137, 0, 6),
+                    new TransformacionRepetitiva.CoordenadaRadio(0, 129, 0, 16)
+            );
 
             @Override
             public void run() {
@@ -101,9 +109,13 @@ public class Spleef implements CommandExecutor {
                     for (Player jugador : mundo.getPlayers()) {
                         jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_BIT, 1, 2);
                         jugador.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 3, 0));
-                        Bukkit.getScheduler().runTaskLater(plugin, () -> darPala(jugador), 20 * 3L);
-                        transformarBloques.transformarRegionCircular(mundo, 0, 139, 0, 9);
 
+                        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                            transformacionRepetitiva.ejecutarTransformaciones(mundo, configuraciones, 1);
+                            darPala(jugador);
+                            bossbar = new Bossbar(plugin, "Tiempo restante: ", tiempoTotal);
+                            bossbar.Inicio();
+                        }, 20 * 3L);
                     }
 
                     destruirBloques(mundo, x1, y1, z1, x2, y2, z2);
@@ -112,7 +124,7 @@ public class Spleef implements CommandExecutor {
                         for (Player jugador : mundo.getPlayers()) {
                             jugador.sendMessage("Va a terminar");
                         }
-                    }, 14 * (plugin.getConfig().getLong("spleef.duracionJuego")));
+                    }, 18 * (plugin.getConfig().getLong("spleef.duracionJuego")));
 
                     Bukkit.getScheduler().runTaskLater(plugin, () -> {
                         setJuegoActivo(false);
@@ -120,9 +132,7 @@ public class Spleef implements CommandExecutor {
                             Inventory inventory = jugador.getInventory();
 
                             for (ItemStack item : inventory.getContents()) {
-                                if (item != null && (item.getType() == Material.WOODEN_SHOVEL
-                                        || item.getType() == Material.IRON_SHOVEL
-                                        || item.getType() == Material.DIAMOND_SHOVEL)) {
+                                if (item != null && (item.getType() == Material.STONE_SHOVEL || item.getType() == Material.DIAMOND_SHOVEL)) {
                                     inventory.remove(item);
                                 }
                             }
@@ -169,11 +179,11 @@ public class Spleef implements CommandExecutor {
     private void mostrarMensajeSpleef() {
         String mensaje = ChatColor.translateAlternateColorCodes('&',
                 "------------\n" +
-                        net.md_5.bungee.api.ChatColor.of("#CAE3E6")+"[❄&f] "+net.md_5.bungee.api.ChatColor.of("#CAE3E6") + "Spleef " + net.md_5.bungee.api.ChatColor.of("#CAE3E6") + "&f[❄&f]\n" +
-                        net.md_5.bungee.api.ChatColor.of("#CAE3E6")+"Trabaja con tu equipo para\n" +
-                        net.md_5.bungee.api.ChatColor.of("#CAE3E6")+"romper los bloques bajo tus\n" +
-                        net.md_5.bungee.api.ChatColor.of("#CAE3E6")+"oponentes y quedar ultimo en pie\n" +
-                        "&f&l¡"+ net.md_5.bungee.api.ChatColor.of("#CAE3E6") +"Demuestra que equipo es mejor&f&l!\n" +
+                        net.md_5.bungee.api.ChatColor.of("#CAE3E6") + "[❄&f] " + net.md_5.bungee.api.ChatColor.of("#CAE3E6") + "Spleef &f[" + net.md_5.bungee.api.ChatColor.of("#CAE3E6") + "❄&f]\n" +
+                        net.md_5.bungee.api.ChatColor.of("#CAE3E6") + "Trabaja con tu equipo para\n" +
+                        net.md_5.bungee.api.ChatColor.of("#CAE3E6") + "romper los bloques bajo tus\n" +
+                        net.md_5.bungee.api.ChatColor.of("#CAE3E6") + "oponentes y quedar último en pie\n" +
+                        "&f&l¡" + net.md_5.bungee.api.ChatColor.of("#CAE3E6") + "Demuestra que equipo es mejor&f&l!\n" +
                         "-------------------------");
 
         for (Player jugador : Bukkit.getOnlinePlayers()) {
@@ -183,4 +193,3 @@ public class Spleef implements CommandExecutor {
         }
     }
 }
-

@@ -19,7 +19,7 @@ public class Bossbar {
     public Bossbar(JavaPlugin plugin, String title, int tiempoInicial) {
         this.plugin = plugin;
         this.tiempoInicial = tiempoInicial;
-        this.tiempoRestante = plugin.getConfig().getInt("spleef.duracionJuego");
+        this.tiempoRestante = tiempoInicial;
         this.bossbar = Bukkit.createBossBar(
                 ChatColor.AQUA + title + Tiempo(tiempoRestante),
                 BarColor.BLUE,
@@ -43,7 +43,7 @@ public class Bossbar {
                 }
 
                 bossbar.setTitle(ChatColor.AQUA + "Tiempo restante: " + Tiempo(tiempoRestante));
-                double progress = (double) tiempoRestante / tiempoInicial;
+                double progress = Math.max(0.0, Math.min(1.0, (double) tiempoRestante / tiempoInicial));
                 bossbar.setProgress(progress);
                 tiempoRestante--;
             }
@@ -51,6 +51,7 @@ public class Bossbar {
 
         task.runTaskTimer(plugin, 0L, 20L);
     }
+
 
 
     public void Finalizacion() {

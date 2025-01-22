@@ -1,66 +1,75 @@
 package com.badstudio.plugin.minigames.spleef.utils;
 
-import com.badstudio.plugin.minigames.spleef.Spleef;
+import com.badstudio.plugin.Main;
+import net.minecraft.network.protocol.game.PacketPlayOutBlockBreakAnimation;
+import net.minecraft.core.BlockPosition;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class TransformarBloquesSpleef{
+public class TransformarBloquesSpleef {
 
-    private final Spleef plugin;
+    private final Main plugin;
 
-    public TransformarBloquesSpleef(Spleef plugin) {
+    public TransformarBloquesSpleef(Main plugin) {
         this.plugin = plugin;
     }
 
     public void transformarRegionCircular(World mundo, int centroX, int centroY, int centroZ, int radio) {
         Set<Location> bloques = new HashSet<>();
 
-
-        for (int x = -radio; x <= radio; x++) {
-            for (int z = -radio; z <= radio; z++) {
-                if (x * x + z * z <= radio * radio) {
-                    Location loc = new Location(mundo, centroX + x, centroY, centroZ + z);
-                    if (mundo.getBlockAt(loc).getType() == Material.SNOW_BLOCK) {
-                        bloques.add(loc);
+        // Crea los "anillos" desde afuera hacia adentro
+        for (int r = radio; r >= 1; r--) {
+            for (int x = -r; x <= r; x++) {
+                for (int z = -r; z <= r; z++) {
+                    if (x * x + z * z <= r * r && x * x + z * z > (r - 1) * (r - 1)) {
+                        Location loc = new Location(mundo, centroX + x, centroY, centroZ + z);
+                        if (mundo.getBlockAt(loc).getType() == Material.SNOW_BLOCK) {
+                            bloques.add(loc);
+                        }
                     }
                 }
             }
         }
-
+        int tiempoPorAnillo = 32 / radio; // Tiempo por cada "anillo"
         new BukkitRunnable() {
-            int paso = 0;
+            int paso = 0; // Progreso de la textura
 
             @Override
             public void run() {
-                if (bloques.isEmpty() || paso >= 30) {
+                if (bloques.isEmpty()) {
                     cancel();
                     return;
                 }
-                int radioActual = radio - paso;
 
-                bloques.removeIf(loc -> {
-                    if (loc.distance(new Location(mundo, centroX, centroY, centroZ)) >= radioActual) {
+                Set<Location> procesados = new HashSet<>();
 
-                        mundo.getBlockAt(loc).setType(Material.BLUE_ICE);
-                        Bukkit.getScheduler().runTaskLater((Plugin) plugin, () -> {
-                            if (mundo.getBlockAt(loc).getType() == Material.BLUE_ICE) {
-                                mundo.getBlockAt(loc).setType(Material.AIR);
-                            }
-                        }, 20L);
-                        return true;
+                for (Location loc : bloques) {
+
+                    // Cuando la textura llega a 9, convierte a hielo azul
+                    if (paso >= 9) {
+                        loc.getBlock().setType(Material.BLUE_ICE);
+
+                        // Después de 1 segundo, elimina el bloque
+                        Bukkit.getScheduler().runTaskLater(plugin, () -> loc.getBlock().setType(Material.AIR), 20L);
+                        procesados.add(loc);
                     }
-                    return false;
-                });
+                }
 
+                bloques.removeAll(procesados);
                 paso++;
+                if (paso > 9) {
+                    paso = 0;
+                }
             }
-        }.runTaskTimer((Plugin) plugin, 0L, 20L);
+        }.runTaskTimer(plugin, 0L, tiempoPorAnillo * 20L);
     }
+
 }

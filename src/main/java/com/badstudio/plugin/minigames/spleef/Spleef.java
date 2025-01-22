@@ -4,10 +4,8 @@ import com.badstudio.plugin.Main;
 import com.badstudio.plugin.minigames.spleef.utils.Bossbar;
 import com.badstudio.plugin.minigames.spleef.utils.TransformarBloquesSpleef;
 import com.badstudio.plugin.utils.GuardarMapa;
+
 import org.bukkit.*;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,6 +16,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import org.jetbrains.annotations.NotNull;
 
 public class Spleef implements CommandExecutor {
     private final Main plugin;
@@ -39,7 +39,7 @@ public class Spleef implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         World mundo = Bukkit.getWorld("Spleef");
 
         if (Bukkit.getWorlds().contains(mundo)) {
@@ -159,7 +159,9 @@ public class Spleef implements CommandExecutor {
     private void darPala(Player player) {
         ItemStack palaPiedra = new ItemStack(Material.STONE_SHOVEL);
         ItemMeta palaPiedraMeta = palaPiedra.getItemMeta();
-        palaPiedraMeta.setUnbreakable(true);
+        if (palaPiedraMeta != null) {
+            palaPiedraMeta.setUnbreakable(true);
+        }
         palaPiedra.setItemMeta(palaPiedraMeta);
         player.getInventory().setItem(0, palaPiedra);
     }

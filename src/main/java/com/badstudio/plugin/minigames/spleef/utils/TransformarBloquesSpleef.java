@@ -1,6 +1,5 @@
 package com.badstudio.plugin.minigames.spleef.utils;
 
-import com.badstudio.plugin.Main;
 import com.badstudio.plugin.minigames.spleef.Spleef;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

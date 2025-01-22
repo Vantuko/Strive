@@ -1,6 +1,7 @@
 package com.badstudio.plugin.commands;
 
 import com.badstudio.plugin.Main;
+
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 public class StriveComandos implements CommandExecutor {
 
     private final Main plugin;
@@ -25,7 +28,7 @@ public class StriveComandos implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
         Player player = (Player) sender;
 
@@ -49,7 +52,7 @@ public class StriveComandos implements CommandExecutor {
         return true;
     }
     private void Host(Player player) {
-        List<Player> Jugadores = new ArrayList(Bukkit.getOnlinePlayers());
+        List<Player> Jugadores = new ArrayList<>(Bukkit.getOnlinePlayers());
 
         int maximoJugadores = (plugin.getConfigs().maximoJugadoresPurga());
 

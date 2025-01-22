@@ -1,12 +1,15 @@
 package com.badstudio.plugin.commands;
 
 import com.badstudio.plugin.Main;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
 
 public class StriveTabCompleter implements TabCompleter {
 
@@ -17,7 +20,7 @@ public class StriveTabCompleter implements TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args){
+    public List<String> onTabComplete(@NotNull CommandSender sender, Command command, @NotNull String alias, String[] args){
 
         
         List<String> suggestions = new ArrayList<>();

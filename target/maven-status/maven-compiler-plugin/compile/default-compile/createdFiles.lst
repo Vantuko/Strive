@@ -2,6 +2,7 @@ com\badstudio\plugin\minigames\spleef\utils\Bossbar.class
 com\badstudio\plugin\Main.class
 com\badstudio\plugin\minigames\spleef\Spleef.class
 com\badstudio\plugin\minigames\spleef\listeners\LaPala$1.class
+com\badstudio\plugin\minigames\spleef\utils\TransformarBloquesSpleef$1.class
 com\badstudio\plugin\utils\Config.class
 com\badstudio\plugin\utils\GuardarMapa.class
 com\badstudio\plugin\minigames\spleef\utils\Bossbar$1.class
@@ -10,3 +11,4 @@ com\badstudio\plugin\commands\StriveComandos.class
 com\badstudio\plugin\commands\StriveTabCompleter.class
 com\badstudio\plugin\minigames\spleef\Spleef$1.class
 com\badstudio\plugin\listeners\Events.class
+com\badstudio\plugin\minigames\spleef\utils\TransformarBloquesSpleef.class

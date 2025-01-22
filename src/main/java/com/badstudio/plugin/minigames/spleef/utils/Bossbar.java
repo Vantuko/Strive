@@ -39,19 +39,20 @@ public class Bossbar {
             @Override
             public void run() {
                 if (tiempoRestante <= 0) {
-
                     Finalizacion();
                     return;
                 }
 
                 bossbar.setTitle(ChatColor.AQUA + "Tiempo restante: " + Tiempo(tiempoRestante));
-                bossbar.setProgress((double) tiempoRestante / tiempoInicial);
+                double progress = (double) tiempoRestante / tiempoInicial;
+                bossbar.setProgress(progress);
                 tiempoRestante--;
             }
         };
 
         task.runTaskTimer(plugin, 0L, 20L);
     }
+
 
     public void Finalizacion() {
         if (task != null) {

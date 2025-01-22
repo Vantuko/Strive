@@ -88,6 +88,7 @@ public class LaPala implements Listener {
                 int eficienciaActual = palaActual.getEnchantmentLevel(Enchantment.EFFICIENCY);
                 if (eficienciaActual < 5) {
                     agregarEficiencia(palaActual, eficienciaActual + 1);
+                    jugador.playSound(jugador.getLocation(), Sound.ENTITY_ITEM_BREAK, 0.3F, 1);
                 }
                 return;
         }

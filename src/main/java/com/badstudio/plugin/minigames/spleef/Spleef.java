@@ -2,6 +2,7 @@ package com.badstudio.plugin.minigames.spleef;
 
 import com.badstudio.plugin.Main;
 import com.badstudio.plugin.minigames.spleef.utils.Bossbar;
+import com.badstudio.plugin.minigames.spleef.utils.TransformarBloquesSpleef;
 import com.badstudio.plugin.utils.GuardarMapa;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
@@ -22,7 +23,8 @@ public class Spleef implements CommandExecutor {
     private final Main plugin;
     private final GuardarMapa guardarMapa = new GuardarMapa();
     private Bossbar bossbar;
-    private static boolean juegoActivo = false; // Estado compartido del juego
+    private static boolean juegoActivo = false;
+    TransformarBloquesSpleef transformarBloques = new TransformarBloquesSpleef(this);
 
     public Spleef(Main plugin) {
         this.plugin = plugin;
@@ -100,6 +102,8 @@ public class Spleef implements CommandExecutor {
                         jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_BIT, 1, 2);
                         jugador.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 3, 0));
                         Bukkit.getScheduler().runTaskLater(plugin, () -> darPala(jugador), 20 * 3L);
+                        transformarBloques.transformarRegionCircular(mundo, 0, 139, 0, 9);
+
                     }
 
                     destruirBloques(mundo, x1, y1, z1, x2, y2, z2);

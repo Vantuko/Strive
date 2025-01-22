@@ -157,11 +157,11 @@ public class Spleef implements CommandExecutor {
     }
 
     private void darPala(Player player) {
-        ItemStack palaMadera = new ItemStack(Material.WOODEN_SHOVEL);
-        ItemMeta palaMaderaMeta = palaMadera.getItemMeta();
-        palaMaderaMeta.setUnbreakable(true);
-        palaMadera.setItemMeta(palaMaderaMeta);
-        player.getInventory().setItem(0, palaMadera);
+        ItemStack palaPiedra = new ItemStack(Material.STONE_SHOVEL);
+        ItemMeta palaPiedraMeta = palaPiedra.getItemMeta();
+        palaPiedraMeta.setUnbreakable(true);
+        palaPiedra.setItemMeta(palaPiedraMeta);
+        player.getInventory().setItem(0, palaPiedra);
     }
 
     private void mostrarMensajeSpleef() {

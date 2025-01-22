@@ -3,7 +3,6 @@ package com.badstudio.plugin.minigames.spleef;
 import com.badstudio.plugin.Main;
 import com.badstudio.plugin.minigames.spleef.utils.Bossbar;
 import com.badstudio.plugin.minigames.spleef.utils.TransformacionRepetitiva;
-import com.badstudio.plugin.minigames.spleef.utils.TransformarBloquesSpleef;
 import com.badstudio.plugin.utils.GuardarMapa;
 
 import org.bukkit.*;
@@ -22,19 +21,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static org.bukkit.Bukkit.getLogger;
-
 public class Spleef implements CommandExecutor {
     private final Main plugin;
     private final GuardarMapa guardarMapa = new GuardarMapa();
     private Bossbar bossbar;
     private static boolean juegoActivo = false;
-    private final TransformarBloquesSpleef transformarBloques;
+
     private final TransformacionRepetitiva transformacionRepetitiva;
 
     public Spleef(Main plugin) {
         this.plugin = plugin;
-        this.transformarBloques = new TransformarBloquesSpleef(plugin);
         this.transformacionRepetitiva = new TransformacionRepetitiva(plugin);
     }
 

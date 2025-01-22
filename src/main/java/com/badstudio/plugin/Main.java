@@ -10,6 +10,8 @@ import com.badstudio.plugin.commands.StriveComandos;
 import com.badstudio.plugin.utils.Config;
 import org.bukkit.Bukkit;
 
+import java.util.Objects;
+
 public final class Main extends JavaPlugin {
 
     private Config config;
@@ -24,9 +26,9 @@ public final class Main extends JavaPlugin {
 
 
         //Registro de comandos
-        getCommand("strive").setExecutor(new StriveComandos(this));
-        getCommand("spleef").setExecutor(new Spleef(this));
-        getCommand("strive").setTabCompleter(new StriveTabCompleter(this));
+        Objects.requireNonNull(getCommand("strive")).setExecutor(new StriveComandos(this));
+        Objects.requireNonNull(getCommand("spleef")).setExecutor(new Spleef(this));
+        Objects.requireNonNull(getCommand("strive")).setTabCompleter(new StriveTabCompleter(this));
 
         //Registro de eventos
         PluginManager pm = Bukkit.getServer().getPluginManager();

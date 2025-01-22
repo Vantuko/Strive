@@ -1,4 +1,4 @@
-name: Purga
+name: BadStudio
 version: '1.0 [BETA]'
 main: com.badstudio.plugin.Main
 api-version: '1.21'

@@ -1,9 +1,9 @@
 package com.badstudio.plugin.minigames.spleef.utils;
 
 import com.badstudio.plugin.Main;
+
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;

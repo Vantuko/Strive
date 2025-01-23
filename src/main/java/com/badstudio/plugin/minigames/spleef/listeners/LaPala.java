@@ -2,10 +2,8 @@ package com.badstudio.plugin.minigames.spleef.listeners;
 
 import com.badstudio.plugin.minigames.spleef.Spleef;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import net.md_5.bungee.api.ChatMessageType;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -17,6 +15,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.ChatColor;
+
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -44,11 +45,18 @@ public class LaPala implements Listener {
 
                 bloquesDestruidos.put(jugadorID, bloquesDestruidos.getOrDefault(jugadorID, 0) + 1);
 
-                if (bloquesDestruidos.get(jugadorID) >= finalBlock) {
+                int bloquesActuales = bloquesDestruidos.get(jugadorID);
+
+                TextComponent mensaje = new TextComponent(ChatColor.AQUA +""+ ChatColor.BOLD +String.valueOf(bloquesActuales) + "/" + finalBlock+"]");
+                // Enviar el progreso al jugador mediante un Action Bar
+                jugador.spigot().sendMessage(ChatMessageType.ACTION_BAR, mensaje);
+
+
+                if (bloquesActuales >= finalBlock) {
                     jugador.getInventory().addItem(new ItemStack(Material.SNOWBALL, 1));
                     jugador.playSound(jugador, Sound.ITEM_BUCKET_EMPTY_POWDER_SNOW, 1, 2);
                     mejorarPala(jugador);
-                    bloquesDestruidos.put(jugadorID, 0);
+                    bloquesDestruidos.put(jugadorID, 0); // Reiniciar el progreso
                 }
 
             }

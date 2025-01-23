@@ -84,10 +84,10 @@ public class Spleef implements CommandExecutor {
         new BukkitRunnable() {
             private int tiempoRestante = plugin.getConfig().getInt("spleef.duracionInicio");
             private final List<TransformacionRepetitiva.CoordenadaRadio> configuraciones = List.of(
-                    new TransformacionRepetitiva.CoordenadaRadio(0, 139, 0, 11),
-                    new TransformacionRepetitiva.CoordenadaRadio(0, 138, 0, 3),
-                    new TransformacionRepetitiva.CoordenadaRadio(0, 137, 0, 6),
-                    new TransformacionRepetitiva.CoordenadaRadio(0, 129, 0, 16)
+                    new TransformacionRepetitiva.CoordenadaRadio(0, 139, 0, 9),
+                    new TransformacionRepetitiva.CoordenadaRadio(0, 138, 0, 10),
+                    new TransformacionRepetitiva.CoordenadaRadio(0, 137, 0, 7),
+                    new TransformacionRepetitiva.CoordenadaRadio(0, 129, 0, 17)
             );
 
             @Override

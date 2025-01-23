@@ -31,7 +31,7 @@ public class TransformacionRepetitiva {
 
                 index++;
             }
-        }.runTaskTimer(plugin, 0L, intervaloSegundos * 20L);
+        }.runTaskTimer(plugin, 0L, intervaloSegundos * 20L); // Intervalo en segundos convertido a ticks
     }
 
     public static class CoordenadaRadio {

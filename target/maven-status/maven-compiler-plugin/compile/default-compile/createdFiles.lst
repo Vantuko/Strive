@@ -4,9 +4,10 @@ com\badstudio\plugin\minigames\spleef\Spleef.class
 com\badstudio\plugin\minigames\spleef\listeners\LaPala$1.class
 com\badstudio\plugin\minigames\spleef\utils\TransformarBloquesSpleef$1.class
 com\badstudio\plugin\utils\Config.class
+com\badstudio\plugin\minigames\spleef\utils\TransformarBloquesSpleef$2.class
 com\badstudio\plugin\utils\GuardarMapa.class
 com\badstudio\plugin\minigames\spleef\utils\Bossbar$1.class
-com\badstudio\plugin\minigames\spleef\utils\TransformacionRepetitiva$1.class
+com\badstudio\plugin\minigames\spleef\listeners\GhostPlayerListener.class
 com\badstudio\plugin\minigames\spleef\utils\TransformacionRepetitiva$CoordenadaRadio.class
 com\badstudio\plugin\minigames\spleef\listeners\LaPala.class
 com\badstudio\plugin\commands\StriveComandos.class

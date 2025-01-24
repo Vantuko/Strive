@@ -12,6 +12,8 @@ import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -37,6 +39,10 @@ public class LaPala implements Listener {
         World mundo = Bukkit.getWorld("Spleef");
 
         if (mundo != null && e.getBlock().getWorld().equals(mundo)) {
+            if(e.getPlayer().getInventory().getItemInMainHand().getType() == Material.AIR){
+                e.setCancelled(true);
+                e.getPlayer().sendMessage(ChatColor.RED+"Usa la pala para romper los bloques!");
+            }
             if (e.getBlock().getType() == Material.SNOW_BLOCK) {
                 e.setDropItems(false);
 
@@ -47,8 +53,18 @@ public class LaPala implements Listener {
 
                 int bloquesActuales = bloquesDestruidos.get(jugadorID);
 
-                TextComponent mensaje = new TextComponent(ChatColor.AQUA +""+ ChatColor.BOLD +String.valueOf(bloquesActuales) + "/" + finalBlock+"]");
-                // Enviar el progreso al jugador mediante un Action Bar
+                TextComponent mensaje;
+
+                ItemStack itemEnMano = jugador.getInventory().getItemInMainHand();
+                if (itemEnMano.getType() == Material.DIAMOND_SHOVEL &&
+                        itemEnMano.containsEnchantment(Enchantment.EFFICIENCY) &&
+                        itemEnMano.getEnchantmentLevel(Enchantment.EFFICIENCY) == 5) {
+                    mensaje = new TextComponent(ChatColor.AQUA + "" + ChatColor.BOLD + "[" + bloquesActuales + "/" + finalBlock + "] " +
+                            ChatColor.RED + "" + ChatColor.BOLD + "[MAX]");
+                } else {
+                    mensaje = new TextComponent(ChatColor.AQUA + "" + ChatColor.BOLD + "[" + bloquesActuales + "/" + finalBlock + "]");
+                }
+
                 jugador.spigot().sendMessage(ChatMessageType.ACTION_BAR, mensaje);
 
 
@@ -56,7 +72,7 @@ public class LaPala implements Listener {
                     jugador.getInventory().addItem(new ItemStack(Material.SNOWBALL, 1));
                     jugador.playSound(jugador, Sound.ITEM_BUCKET_EMPTY_POWDER_SNOW, 1, 2);
                     mejorarPala(jugador);
-                    bloquesDestruidos.put(jugadorID, 0); // Reiniciar el progreso
+                    bloquesDestruidos.put(jugadorID, 0);
                 }
 
             }
@@ -80,6 +96,17 @@ public class LaPala implements Listener {
                     }
                 } else {
                     Bukkit.getLogger().warning("No estas en el mundo de Spleef!");
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerHitPlayer(EntityDamageEvent e){
+        if(e.getEntity().getWorld().equals("Spleef")){
+            if(Spleef.isJuegoActivo()){
+                if(e.getEntity() instanceof Player){
+                    e.setCancelled(true);
                 }
             }
         }

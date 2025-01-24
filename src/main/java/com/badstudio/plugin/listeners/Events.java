@@ -1,20 +1,12 @@
 package com.badstudio.plugin.listeners;
 
-import com.badstudio.plugin.minigames.spleef.Spleef;
-
-import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffectType;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Events implements Listener{
     @EventHandler
@@ -35,26 +27,4 @@ public class Events implements Listener{
         e.setQuitMessage(ChatColor.translateAlternateColorCodes('&', "&7[&c-&7] &c"+player.getName()));
 
     }
-
-    @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent e){
-        if (!Spleef.isJuegoActivo()) {
-            return;
-        }
-
-        e.getEntity();
-        Player player = e.getEntity();
-        World mundo = player.getWorld();
-        List<Player> jugadores = new ArrayList<>(Bukkit.getOnlinePlayers());
-        e.setDeathMessage(null);
-
-        if(mundo.getName().equalsIgnoreCase("Spleef")){
-            for(Player jugador : jugadores){
-                if(jugador.getWorld().getName().equalsIgnoreCase("Spleef")){
-                    jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c¡El jugador &f" + player.getName() + " &cha caído de la arena!"));
-                }
-            }
-        }
-    }
-
 }

@@ -1,5 +1,6 @@
 package com.badstudio.plugin.minigames.spleef.listeners;
 
+import com.badstudio.plugin.Main;
 import com.badstudio.plugin.minigames.spleef.Spleef;
 
 import net.md_5.bungee.api.ChatMessageType;
@@ -12,7 +13,6 @@ import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
@@ -26,60 +26,75 @@ import java.util.UUID;
 
 
 public class LaPala implements Listener {
-
+    private final Main plugin;
     private final HashMap<UUID, Integer> bloquesDestruidos = new HashMap<>();
     private static final int finalBlock = 20;
+    private final GhostPlayerListener ghostPlayerListener;
+
+    public LaPala(Main plugin, GhostPlayerListener ghostPlayerListener) {
+        this.plugin = plugin;
+        this.ghostPlayerListener = ghostPlayerListener;
+    }
+
 
     @EventHandler
     public void onBreakSnow(BlockBreakEvent e) {
-        if(!Spleef.isJuegoActivo()){
+        if (!Spleef.isJuegoActivo()) {
             return;
         }
-
         World mundo = Bukkit.getWorld("Spleef");
 
         if (mundo != null && e.getBlock().getWorld().equals(mundo)) {
-            if(e.getPlayer().getInventory().getItemInMainHand().getType() == Material.AIR){
+            // Evita que fantasmas rompan bloques
+            if (ghostPlayerListener.getGhostPlayers().contains(e.getPlayer().getUniqueId())) {
                 e.setCancelled(true);
-                e.getPlayer().sendMessage(ChatColor.RED+"Usa la pala para romper los bloques!");
+                return;
             }
+
+            // Verifica que solo se pueda usar una pala para romper
+            ItemStack herramientaEnMano = e.getPlayer().getInventory().getItemInMainHand();
+            if (herramientaEnMano.getType() != Material.STONE_SHOVEL && herramientaEnMano.getType() != Material.DIAMOND_SHOVEL) {
+                e.setCancelled(true);
+                e.getPlayer().sendMessage(ChatColor.RED + "¡Usa una pala para romper los bloques!");
+                return;
+            }
+
             if (e.getBlock().getType() == Material.SNOW_BLOCK) {
                 e.setDropItems(false);
 
                 Player jugador = e.getPlayer();
                 UUID jugadorID = jugador.getUniqueId();
 
+                // Incrementa el contador solo si se usa una pala válida
                 bloquesDestruidos.put(jugadorID, bloquesDestruidos.getOrDefault(jugadorID, 0) + 1);
-
                 int bloquesActuales = bloquesDestruidos.get(jugadorID);
 
+                // Actualiza la barra de acción
                 TextComponent mensaje;
-
                 ItemStack itemEnMano = jugador.getInventory().getItemInMainHand();
                 if (itemEnMano.getType() == Material.DIAMOND_SHOVEL &&
                         itemEnMano.containsEnchantment(Enchantment.EFFICIENCY) &&
                         itemEnMano.getEnchantmentLevel(Enchantment.EFFICIENCY) == 5) {
-                    mensaje = new TextComponent(ChatColor.AQUA + "" + ChatColor.BOLD + "[" + bloquesActuales + "/" + finalBlock + "] " +
-                            ChatColor.RED + "" + ChatColor.BOLD + "[MAX]");
+                    mensaje = new TextComponent(ChatColor.RED + "" + ChatColor.BOLD + "[MAX]");
                 } else {
                     mensaje = new TextComponent(ChatColor.AQUA + "" + ChatColor.BOLD + "[" + bloquesActuales + "/" + finalBlock + "]");
                 }
 
                 jugador.spigot().sendMessage(ChatMessageType.ACTION_BAR, mensaje);
 
-
+                // Verifica si se alcanzó el límite de bloques para mejorar la pala
                 if (bloquesActuales >= finalBlock) {
                     jugador.getInventory().addItem(new ItemStack(Material.SNOWBALL, 1));
                     jugador.playSound(jugador, Sound.ITEM_BUCKET_EMPTY_POWDER_SNOW, 1, 2);
                     mejorarPala(jugador);
-                    bloquesDestruidos.put(jugadorID, 0);
+                    bloquesDestruidos.put(jugadorID, 0); // Reinicia el contador
                 }
-
             }
         } else {
             Bukkit.getLogger().warning("El mundo Spleef no existe!");
         }
     }
+
 
     @EventHandler
     public void onSnowballThrow(ProjectileHitEvent e) {

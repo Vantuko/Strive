@@ -24,9 +24,9 @@ public class Bossbar {
         this.tiempoInicial = tiempoInicial;
         this.tiempoRestante = tiempoInicial;
 
-        // Crea una barra individual para cada jugador en el mundo "Spleef"
+        // Evita duplicados verificando si ya existe una BossBar para el jugador
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.getWorld().getName().equalsIgnoreCase("Spleef")) {
+            if (player.getWorld().getName().equalsIgnoreCase("Spleef") && !bossbars.containsKey(player)) {
                 BossBar bossBar = Bukkit.createBossBar(
                         ChatColor.AQUA + "Tiempo restante: " + Tiempo(tiempoRestante),
                         BarColor.BLUE,

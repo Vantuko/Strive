@@ -121,12 +121,14 @@ public class GhostPlayerListener implements Listener {
         player.setAllowFlight(false);
 
         for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
-            otherPlayer.showPlayer(plugin, player);
+            otherPlayer.showPlayer(plugin, player); // Hace visible al jugador
         }
 
         player.removeMetadata("ghost", plugin);
         ghostPlayers.remove(player.getUniqueId());
+        player.setInvisible(false); // Asegura que no queden invisibles
     }
+
 
     @EventHandler
     public void onPlayerToggleFlight(PlayerToggleFlightEvent event) {

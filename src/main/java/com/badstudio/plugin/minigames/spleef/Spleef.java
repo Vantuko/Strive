@@ -27,12 +27,11 @@ public class Spleef implements CommandExecutor {
     private final GuardarMapa guardarMapa = new GuardarMapa();
     private Bossbar bossbar;
     private static boolean juegoActivo = false;
-    private final GhostPlayerListener ghostPlayerListener;
+
 
 
     public Spleef(Main plugin) {
         this.plugin = plugin;
-        this.ghostPlayerListener = new GhostPlayerListener(plugin);
     }
 
     public static boolean isJuegoActivo() {

@@ -71,7 +71,7 @@ public class StriveComandos implements CommandExecutor {
             for (Player Jugador : JugadoresEliminados) {
                 Bukkit.getScheduler().runTaskLater(plugin, () -> {
                     Location ubicacionJugador = Jugador.getLocation();
-                    World mundo = Jugador.getWorld();
+                    World   mundo = Jugador.getWorld();
 
                     launchFirework(mundo, ubicacionJugador);
 

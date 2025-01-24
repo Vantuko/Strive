@@ -1,13 +1,14 @@
 package com.badstudio.plugin.minigames.spleef.utils;
 
 import com.badstudio.plugin.Main;
-
-import org.bukkit.*;
-import org.bukkit.block.Block;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TransformarBloquesSpleef {
 
@@ -17,59 +18,65 @@ public class TransformarBloquesSpleef {
         this.plugin = plugin;
     }
 
-    public void transformarRegionCircular(World mundo, int centroX, int centroY, int centroZ, int radio) {
-        Set<Location> bloques = new HashSet<>();
+    public void transformarRegionCircular(World mundo, int centroX, int centroY, int centroZ, int radio, int delayEntreAnillos, int tiempoDesaparicion, Runnable onFinish) {
+        List<List<Location>> anillos = new ArrayList<>();
 
-        // Recolecta los bloques en el radio especificado
-        for (int x = -radio; x <= radio; x++) {
-            for (int z = -radio; z <= radio; z++) {
-                if (x * x + z * z <= radio * radio) {
-                    Location loc = new Location(mundo, centroX + x, centroY, centroZ + z);
-                    if (mundo.getBlockAt(loc).getType() == Material.SNOW_BLOCK) {
-                        bloques.add(loc);
+        // Divide los bloques en "anillos" desde el más externo al más interno
+        for (int r = radio; r > 0; r--) {
+            List<Location> anillo = new ArrayList<>();
+            for (int x = -r; x <= r; x++) {
+                for (int z = -r; z <= r; z++) {
+                    if (x * x + z * z <= r * r && x * x + z * z > (r - 1) * (r - 1)) {
+                        Location loc = new Location(mundo, centroX + x, centroY, centroZ + z);
+                        if (mundo.getBlockAt(loc).getType() == Material.SNOW_BLOCK) {
+                            anillo.add(loc);
+                        }
                     }
                 }
+            }
+            if (!anillo.isEmpty()) {
+                anillos.add(anillo);
             }
         }
 
-        // Ejecuta el proceso de transformación y desaparición
+        // Agrega el bloque central si existe
+        Location centro = new Location(mundo, centroX, centroY, centroZ);
+        if (mundo.getBlockAt(centro).getType() == Material.SNOW_BLOCK) {
+            List<Location> bloqueCentral = new ArrayList<>();
+            bloqueCentral.add(centro);
+            anillos.add(bloqueCentral);
+        }
+
+        // Procesa cada anillo con el delay configurado
         new BukkitRunnable() {
+            int anilloActual = 0;
+
             @Override
             public void run() {
-                if (bloques.isEmpty()) {
+                if (anilloActual >= anillos.size()) {
                     cancel();
+                    // Llama al callback cuando todos los anillos hayan desaparecido
+                    onFinish.run();
                     return;
                 }
 
-                Set<Location> bloquesProcesados = new HashSet<>();
+                List<Location> anillo = anillos.get(anilloActual);
 
-                for (Location loc : bloques) {
-                    Block block = mundo.getBlockAt(loc);
+                // Transforma el anillo actual
+                transformarAnillo(anillo, tiempoDesaparicion);
 
-                    // Cambia el bloque a hielo azul
-                    if (block.getType() == Material.SNOW_BLOCK) {
-                        block.setType(Material.BLUE_ICE);
-
-                        // Activa la animación de "romper bloque"
-                        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-                            if (block.getType() == Material.BLUE_ICE) {
-                                mundo.spawnParticle(Particle.BLOCK_CRUMBLE, loc, 10, Material.BLUE_ICE.createBlockData());
-                            }
-                        }, 0L, 5L);
-
-                        // Borra el bloque después de 30 ticks (1.5 segundos)
-                        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                            if (block.getType() == Material.BLUE_ICE) {
-                                block.setType(Material.AIR);
-                            }
-                        }, 30L);
-
-                        bloquesProcesados.add(loc);
-                    }
-                }
-
-                bloques.removeAll(bloquesProcesados);
+                anilloActual++;
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Repite cada segundo
+        }.runTaskTimer(plugin, 0L, delayEntreAnillos * 20L); // Configura el delay entre anillos
     }
+
+    private void transformarAnillo(List<Location> anillo, int tiempoDesaparicion) {
+        for (Location loc : anillo) {
+            loc.getBlock().setType(Material.BLUE_ICE);
+
+            // Elimina el bloque después del tiempo configurado
+            Bukkit.getScheduler().runTaskLater(plugin, () -> loc.getBlock().setType(Material.AIR), tiempoDesaparicion * 20L);
+        }
+    }
+
 }

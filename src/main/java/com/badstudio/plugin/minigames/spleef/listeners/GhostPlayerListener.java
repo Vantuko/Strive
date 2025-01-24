@@ -4,11 +4,14 @@ import com.badstudio.plugin.minigames.spleef.Spleef;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -42,27 +45,31 @@ public class GhostPlayerListener implements Listener {
             if (!ghostPlayers.contains(player.getUniqueId())) {
                 enableGhostMode(player);
                 ghostPlayers.add(player.getUniqueId());
+                player.getInventory().clear();
             }
             UUID victimId = player.getUniqueId();
-            Player victim = player;
+            if (!blockBreakers.containsKey(victimId)) {
+                for (Player jugador : Bukkit.getOnlinePlayers()) {
+                    jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            "&c¡El jugador &f" + player.getName() + " &cha caído de la arena!"));
+                }
+            }
 
             if (blockBreakers.containsKey(victimId)) {
                 UUID breakerId = blockBreakers.get(victimId);
                 Player breaker = Bukkit.getPlayer(breakerId);
 
                 if (breaker != null) {
-                    List<Player> jugadores = new ArrayList<>(Bukkit.getOnlinePlayers());
-                    for(Player jugador : jugadores){
-                        if(jugador.getWorld().equals("Spleef")){
-                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c¡El jugador &f" + victim.getName() + " &cha sido eliminado por &f"+ breaker.getName()));
+                    for (Player jugador : Bukkit.getOnlinePlayers()) {
+                        if (jugador.getWorld().getName().equalsIgnoreCase("Spleef")) {
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    "&c¡El jugador &f" + player.getName() + " &cha sido eliminado por &f" + breaker.getName() + "&c!"));
                         }
                     }
-
                 }
             }
 
             player.teleport(TELEPORT_LOCATION);
-            player.setInvisible(true);
         }
     }
 
@@ -75,14 +82,13 @@ public class GhostPlayerListener implements Listener {
         Player breaker = event.getPlayer();
         Location blockLocation = event.getBlock().getLocation();
 
-
         if (event.getBlock().getType() == Material.SNOW_BLOCK && breaker.getWorld().getName().equalsIgnoreCase("Spleef")) {
-
             for (Player player : breaker.getWorld().getPlayers()) {
                 Location playerLocation = player.getLocation();
 
                 if (isStandingOnBlock(playerLocation, blockLocation)) {
                     blockBreakers.put(player.getUniqueId(), breaker.getUniqueId());
+                    Bukkit.getLogger().info(player.getName() + " ha sido registrado como derribado por " + breaker.getName());
                     break;
                 }
             }
@@ -90,7 +96,6 @@ public class GhostPlayerListener implements Listener {
     }
 
     private boolean isStandingOnBlock(Location playerLocation, Location blockLocation) {
-        // Verificar si el jugador está justo encima del bloque (coordenadas X/Z coinciden y Y = bloque + 1)
         return playerLocation.getBlockX() == blockLocation.getBlockX() &&
                 playerLocation.getBlockZ() == blockLocation.getBlockZ() &&
                 playerLocation.getBlockY() == blockLocation.getBlockY() + 1;
@@ -99,8 +104,8 @@ public class GhostPlayerListener implements Listener {
     private void enableGhostMode(Player player) {
         player.setAllowFlight(true);
         player.setFlying(true);
-        player.getInventory().clear();
 
+        // Invisibles para otros jugadores, pero visibles para ellos mismos
         for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
             if (!otherPlayer.equals(player)) {
                 otherPlayer.hidePlayer(plugin, player);
@@ -108,6 +113,7 @@ public class GhostPlayerListener implements Listener {
         }
 
         player.setMetadata("ghost", new FixedMetadataValue(plugin, true));
+        ghostPlayers.add(player.getUniqueId());
     }
 
     public void disableGhostMode(Player player) {
@@ -115,12 +121,11 @@ public class GhostPlayerListener implements Listener {
         player.setAllowFlight(false);
 
         for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
-            if (!otherPlayer.equals(player)) {
-                otherPlayer.showPlayer(plugin, player);
-            }
+            otherPlayer.showPlayer(plugin, player);
         }
 
         player.removeMetadata("ghost", plugin);
+        ghostPlayers.remove(player.getUniqueId());
     }
 
     @EventHandler
@@ -137,13 +142,6 @@ public class GhostPlayerListener implements Listener {
         if (event.getEntity() instanceof Player) {
             Player victim = (Player) event.getEntity();
             if (victim.hasMetadata("ghost")) {
-                event.setCancelled(true);
-            }
-        }
-
-        if (event.getDamager() instanceof Player) {
-            Player damager = (Player) event.getDamager();
-            if (damager.hasMetadata("ghost")) {
                 event.setCancelled(true);
             }
         }
@@ -166,5 +164,23 @@ public class GhostPlayerListener implements Listener {
                 event.setCancelled(true);
             }
         }
+    }
+
+    @EventHandler
+    public void onProjectileHitPlayer(ProjectileHitEvent event) {
+        if (event.getEntity() instanceof Snowball) {
+            if (event.getEntity().getShooter() instanceof Player ghostPlayer && ghostPlayer.hasMetadata("ghost")) {
+                event.getEntity().remove();
+
+                Snowball nuevoProyectil = ghostPlayer.launchProjectile(Snowball.class);
+                nuevoProyectil.setVelocity(event.getEntity().getVelocity());
+            }
+        }
+    }
+
+
+
+    public Set<UUID> getGhostPlayers() {
+        return ghostPlayers;
     }
 }

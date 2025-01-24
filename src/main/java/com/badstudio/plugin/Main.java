@@ -24,8 +24,7 @@ public final class Main extends JavaPlugin {
 
         //Registro de la config
         config = new Config(this);
-
-
+        GhostPlayerListener ghostPlayerListener = new GhostPlayerListener(this);
         //Registro de comandos
         Objects.requireNonNull(getCommand("strive")).setExecutor(new StriveComandos(this));
         Objects.requireNonNull(getCommand("spleef")).setExecutor(new Spleef(this));
@@ -34,7 +33,7 @@ public final class Main extends JavaPlugin {
         //Registro de eventos
         PluginManager pm = Bukkit.getServer().getPluginManager();
         pm.registerEvents(new Events(), this);
-        pm.registerEvents(new LaPala(), this);
+        pm.registerEvents(new LaPala(this, ghostPlayerListener), this);
         pm.registerEvents(new GhostPlayerListener(this), this);
     }
 

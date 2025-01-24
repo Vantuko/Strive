@@ -3,7 +3,6 @@ package com.badstudio.plugin.minigames.spleef;
 import com.badstudio.plugin.Main;
 import com.badstudio.plugin.minigames.spleef.listeners.GhostPlayerListener;
 import com.badstudio.plugin.minigames.spleef.utils.Bossbar;
-import com.badstudio.plugin.minigames.spleef.utils.TransformacionRepetitiva;
 import com.badstudio.plugin.utils.GuardarMapa;
 
 import org.bukkit.*;
@@ -21,8 +20,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 public class Spleef implements CommandExecutor {
@@ -30,12 +27,12 @@ public class Spleef implements CommandExecutor {
     private final GuardarMapa guardarMapa = new GuardarMapa();
     private Bossbar bossbar;
     private static boolean juegoActivo = false;
+    private final GhostPlayerListener ghostPlayerListener;
 
-    private final TransformacionRepetitiva transformacionRepetitiva;
 
     public Spleef(Main plugin) {
         this.plugin = plugin;
-        this.transformacionRepetitiva = new TransformacionRepetitiva(plugin);
+        this.ghostPlayerListener = new GhostPlayerListener(plugin);
     }
 
     public static boolean isJuegoActivo() {
@@ -88,12 +85,6 @@ public class Spleef implements CommandExecutor {
 
         new BukkitRunnable() {
             private int tiempoRestante = plugin.getConfig().getInt("spleef.duracionInicio");
-            private final List<TransformacionRepetitiva.CoordenadaRadio> configuraciones = List.of(
-                    new TransformacionRepetitiva.CoordenadaRadio(0, 139, 0, 11, 10, 30),
-                    new TransformacionRepetitiva.CoordenadaRadio(0, 138, 0, 14, 10, 30),
-                    new TransformacionRepetitiva.CoordenadaRadio(0, 137, 0, 7,10, 30),
-                    new TransformacionRepetitiva.CoordenadaRadio(0, 129, 0, 17, 10, 30)
-            );
 
             @Override
             public void run() {
@@ -101,7 +92,7 @@ public class Spleef implements CommandExecutor {
 
                 if (tiempoRestante > 0) {
                     for (Player jugador : mundo.getPlayers()) {
-                        jugador.sendTitle(ChatColor.RED + "" + ChatColor.BOLD + "Comenzando en:", String.valueOf(tiempoRestante), 5, 10, 5);
+                        jugador.sendTitle(ChatColor.RED +"Comenzando en:", String.valueOf(tiempoRestante), 5, 10, 5);
                         jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_HAT, 1, 1);
                     }
                 }
@@ -112,9 +103,8 @@ public class Spleef implements CommandExecutor {
                         jugador.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 3, 0));
 
                         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                            transformacionRepetitiva.ejecutarTransformaciones(mundo, configuraciones);
                             darPala(jugador);
-                            bossbar = new Bossbar(plugin, "Tiempo restante: ", tiempoTotal);
+                            bossbar = new Bossbar(plugin, tiempoTotal);
                             bossbar.Inicio();
                         }, 20 * 3L);
                     }
@@ -146,6 +136,9 @@ public class Spleef implements CommandExecutor {
                                     inventory.remove(item);
                                 }
                             }
+                            jugador.setInvisible(false);
+                            jugador.setAllowFlight(false);
+                            jugador.setFlying(false);
 
                         }
 

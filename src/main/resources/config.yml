@@ -26,8 +26,8 @@ spleef:
   duracionInicio: 11 # (Segundos) No se incluye el último número Ej. Pones 10 pero empieza en 9
   duracionJuego: 300 # (Segundos) No incluyas la duracion del inicio
   world_border:
-    initial_size: 30
+    initial_size: 100
     final_size: 10
-    shrink_time: 6000
-    damage_per_second: 1
+    shrink_time: 300
+    damage_per_second: 5
 

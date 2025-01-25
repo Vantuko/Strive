@@ -113,11 +113,6 @@ public class Spleef implements CommandExecutor {
 
                     destruirBloques(mundo, x1, y1, z1, x2, y2, z2);
 
-                    Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                        for (Player jugador : mundo.getPlayers()) {
-                            jugador.sendMessage("Va a terminar");
-                        }
-                    }, 18 * (plugin.getConfig().getLong("spleef.duracionJuego")));
 
                     Bukkit.getScheduler().runTaskLater(plugin, () -> {
                         setJuegoActivo(false);

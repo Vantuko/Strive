@@ -23,9 +23,8 @@ public class Bossbar {
         this.plugin = plugin;
         this.tiempoInicial = tiempoInicial;
         this.tiempoRestante = tiempoInicial;
-    }
 
-    public void Inicio() {
+        // Evita duplicados verificando si ya existe una BossBar para el jugador
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.getWorld().getName().equalsIgnoreCase("Spleef") && !bossbars.containsKey(player)) {
                 BossBar bossBar = Bukkit.createBossBar(
@@ -37,6 +36,13 @@ public class Bossbar {
                 bossbars.put(player, bossBar);
             }
         }
+    }
+
+    public void Inicio() {
+        if (task != null && !task.isCancelled()) {
+            return; // Evita crear múltiples tareas
+        }
+
         task = new BukkitRunnable() {
             @Override
             public void run() {
@@ -44,7 +50,7 @@ public class Bossbar {
                     Finalizacion();
                     return;
                 }
-                // Actualiza cada barra individualmente
+
                 for (Map.Entry<Player, BossBar> entry : bossbars.entrySet()) {
                     BossBar bossBar = entry.getValue();
                     bossBar.setTitle(ChatColor.AQUA + "Tiempo restante: " + Tiempo(tiempoRestante));
@@ -58,6 +64,7 @@ public class Bossbar {
 
         task.runTaskTimer(plugin, 0L, 20L);
     }
+
 
     public void Finalizacion() {
         if (task != null) {

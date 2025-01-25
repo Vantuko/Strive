@@ -2,6 +2,8 @@ package com.badstudio.plugin.minigames.spleef.listeners;
 
 import com.badstudio.plugin.minigames.spleef.Spleef;
 
+import com.badstudio.plugin.minigames.spleef.utils.ScoreManager;
+import net.md_5.bungee.api.ChatMessageType;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -17,6 +19,8 @@ import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.projectiles.ProjectileSource;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.ChatColor;
 
 import java.util.*;
 
@@ -27,9 +31,12 @@ public class GhostPlayerListener implements Listener {
     private static final int LAYER_Y = 54; // Capa de caída
     private static final Location TELEPORT_LOCATION = new Location(Bukkit.getWorld("Spleef"), 0, 144, 0); // Configura la ubicación de teletransporte
     private final JavaPlugin plugin;
+    private final Map<UUID, Long> lastBlockBreakTime = new HashMap<>();
+    private final ScoreManager scoreManager;
 
-    public GhostPlayerListener(JavaPlugin plugin) {
+    public GhostPlayerListener(JavaPlugin plugin, ScoreManager scoreManager) {
         this.plugin = plugin;
+        this.scoreManager = scoreManager;
     }
 
     @EventHandler
@@ -66,13 +73,14 @@ public class GhostPlayerListener implements Listener {
                                     "&c¡El jugador &f" + player.getName() + " &cha sido eliminado por &f" + breaker.getName() + "&c!"));
                         }
                     }
+                    scoreManager.addScore(breakerId, 5);
+                    Bukkit.getLogger().warning("El jugador "+ breaker.getName() + " tiene " + scoreManager.getScore(breakerId) + " puntos.");
                 }
             }
 
             player.teleport(TELEPORT_LOCATION);
         }
     }
-
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         if (!Spleef.isJuegoActivo()) {
@@ -85,12 +93,37 @@ public class GhostPlayerListener implements Listener {
         if (event.getBlock().getType() == Material.SNOW_BLOCK && breaker.getWorld().getName().equalsIgnoreCase("Spleef")) {
             for (Player player : breaker.getWorld().getPlayers()) {
                 Location playerLocation = player.getLocation();
+                long currentTime = System.currentTimeMillis();
 
                 if (isStandingOnBlock(playerLocation, blockLocation)) {
-                    blockBreakers.put(player.getUniqueId(), breaker.getUniqueId());
-                    Bukkit.getLogger().info(player.getName() + " ha sido registrado como derribado por " + breaker.getName());
+                    // Revisa el último tiempo registrado
+                    long lastTime = lastBlockBreakTime.getOrDefault(player.getUniqueId(), 0L);
+                    if (currentTime - lastTime <= 2000) {
+                        blockBreakers.put(player.getUniqueId(), breaker.getUniqueId());
+                    }
+                    // Actualiza el tiempo del último rompimiento
+                    lastBlockBreakTime.put(player.getUniqueId(), currentTime);
                     break;
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerOutsideBorder(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        double damagePerSecond = plugin.getConfig().getDouble("spleef.world_border.damage_per_second");
+        WorldBorder border = player.getWorld().getWorldBorder();
+        double remainingHealth = player.getHealth() - (damagePerSecond / 20.0);
+
+        if (!border.isInside(player.getLocation())) {
+            if(remainingHealth > 0){
+                player.damage(damagePerSecond / 20.0);
+                int timeLeft = (int) Math.ceil(remainingHealth / (damagePerSecond / 20.0));
+                TextComponent advertencia = new TextComponent(
+                        ChatColor.RED + "⚠ " + ChatColor.YELLOW + "Tiempo fuera del borde: " +
+                                ChatColor.GOLD + timeLeft + "s ⚠");
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, advertencia);
             }
         }
     }
@@ -114,6 +147,9 @@ public class GhostPlayerListener implements Listener {
 
         player.setMetadata("ghost", new FixedMetadataValue(plugin, true));
         ghostPlayers.add(player.getUniqueId());
+
+        // Asegúrate de que el jugador esté en modo aventura
+        player.setGameMode(GameMode.ADVENTURE);
     }
 
     public void disableGhostMode(Player player) {
@@ -121,13 +157,14 @@ public class GhostPlayerListener implements Listener {
         player.setAllowFlight(false);
 
         for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
-            otherPlayer.showPlayer(plugin, player); // Hace visible al jugador
+            otherPlayer.showPlayer(plugin, player);
         }
 
         player.removeMetadata("ghost", plugin);
         ghostPlayers.remove(player.getUniqueId());
-        player.setInvisible(false); // Asegura que no queden invisibles
+        player.setInvisible(false); // Asegura visibilidad
     }
+
 
 
     @EventHandler
@@ -141,11 +178,28 @@ public class GhostPlayerListener implements Listener {
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (event.getEntity() instanceof Player victim) {
-            if (victim.hasMetadata("ghost")) {
+        if (event.getEntity() instanceof Player) {
+            Player player = ((Player) event.getEntity()).getPlayer();
+            double finalHealth = Objects.requireNonNull(player).getHealth()  - event.getFinalDamage();
+
+            // Si el jugador va a morir, evita la muerte y activa el modo fantasma
+            if (finalHealth <= 0) {
+                event.setCancelled(true); // Cancela la muerte
+
+                // Pon al jugador en modo fantasma
+                enableGhostMode(player);
+                player.teleport(TELEPORT_LOCATION);
+
+                // Notifica a los demás jugadores
+                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                    onlinePlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c¡El jugador &f" + player.getName() + " &cha sido eliminado!"));
+                }
+            }
+            if (player.hasMetadata("ghost")) {
                 event.setCancelled(true);
             }
         }
+
 
         if (event.getDamager() instanceof Projectile projectile) {
             ProjectileSource shooter = projectile.getShooter();

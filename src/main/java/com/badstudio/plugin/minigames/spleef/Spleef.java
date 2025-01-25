@@ -3,6 +3,7 @@ package com.badstudio.plugin.minigames.spleef;
 import com.badstudio.plugin.Main;
 import com.badstudio.plugin.minigames.spleef.listeners.GhostPlayerListener;
 import com.badstudio.plugin.minigames.spleef.utils.Bossbar;
+import com.badstudio.plugin.minigames.spleef.utils.ScoreManager;
 import com.badstudio.plugin.utils.GuardarMapa;
 
 import org.bukkit.*;
@@ -80,7 +81,8 @@ public class Spleef implements CommandExecutor {
 
     private void inicio(World mundo, int x1, int y1, int z1, int x2, int y2, int z2) {
         final int tiempoTotal = plugin.getConfig().getInt("spleef.duracionJuego");
-        GhostPlayerListener manejoClaseGhost = new GhostPlayerListener(plugin);
+        ScoreManager ScoreManager = new ScoreManager();
+        GhostPlayerListener manejoClaseGhost = new GhostPlayerListener(plugin, ScoreManager);
 
         new BukkitRunnable() {
             private int tiempoRestante = plugin.getConfig().getInt("spleef.duracionInicio");
@@ -105,6 +107,7 @@ public class Spleef implements CommandExecutor {
                             darPala(jugador);
                             bossbar = new Bossbar(plugin, tiempoTotal);
                             bossbar.Inicio();
+                            inicializarBorde(mundo);
                         }, 20 * 3L);
                     }
 
@@ -135,9 +138,6 @@ public class Spleef implements CommandExecutor {
                                     inventory.remove(item);
                                 }
                             }
-                            jugador.setInvisible(false);
-                            jugador.setAllowFlight(false);
-                            jugador.setFlying(false);
 
                         }
 
@@ -169,6 +169,22 @@ public class Spleef implements CommandExecutor {
             }
         }
     }
+
+    public void inicializarBorde(World mundo) {
+        int initialSize = plugin.getConfig().getInt("spleef.world_border.initial_size");
+        int finalSize = plugin.getConfig().getInt("spleef.world_border.final_size");
+        int shrinkTime = plugin.getConfig().getInt("spleef.world_border.shrink_time");
+        double damage = plugin.getConfig().getDouble("spleef.world_border.damage_per_second");
+
+        WorldBorder border = mundo.getWorldBorder();
+        border.setSize(initialSize);
+        border.setCenter(0, 0);
+        border.setDamageAmount(damage);
+
+        border.setSize(finalSize, shrinkTime); // Achicar el borde
+    }
+
+
     private void darPala(Player player) {
         ItemStack palaPiedra = new ItemStack(Material.STONE_SHOVEL);
         ItemMeta palaPiedraMeta = palaPiedra.getItemMeta();

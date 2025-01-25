@@ -39,6 +39,10 @@ public class Bossbar {
     }
 
     public void Inicio() {
+        if (task != null && !task.isCancelled()) {
+            return; // Evita crear múltiples tareas
+        }
+
         task = new BukkitRunnable() {
             @Override
             public void run() {
@@ -47,7 +51,6 @@ public class Bossbar {
                     return;
                 }
 
-                // Actualiza cada barra individualmente
                 for (Map.Entry<Player, BossBar> entry : bossbars.entrySet()) {
                     BossBar bossBar = entry.getValue();
                     bossBar.setTitle(ChatColor.AQUA + "Tiempo restante: " + Tiempo(tiempoRestante));
@@ -61,6 +64,7 @@ public class Bossbar {
 
         task.runTaskTimer(plugin, 0L, 20L);
     }
+
 
     public void Finalizacion() {
         if (task != null) {

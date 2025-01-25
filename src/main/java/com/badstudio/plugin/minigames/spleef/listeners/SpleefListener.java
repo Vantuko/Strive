@@ -1,5 +1,6 @@
 package com.badstudio.plugin.minigames.spleef.listeners;
 
+import com.badstudio.plugin.Main;
 import com.badstudio.plugin.minigames.spleef.Spleef;
 
 import net.md_5.bungee.api.ChatMessageType;
@@ -15,6 +16,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -29,9 +31,11 @@ public class SpleefListener implements Listener {
     private final HashMap<UUID, Integer> bloquesDestruidos = new HashMap<>();
     private static final int finalBlock = 20;
     private final GhostPlayerListener ghostPlayerListener;
+    private final Main plugin;
 
-    public SpleefListener(GhostPlayerListener ghostPlayerListener) {
+    public SpleefListener(GhostPlayerListener ghostPlayerListener, Main plugin) {
         this.ghostPlayerListener = ghostPlayerListener;
+        this.plugin = plugin;
     }
 
 
@@ -124,6 +128,8 @@ public class SpleefListener implements Listener {
             }
         }
     }
+
+
     @EventHandler
     public void blockCraft(PrepareItemCraftEvent e) {
         if (Spleef.isJuegoActivo()) {
@@ -132,6 +138,7 @@ public class SpleefListener implements Listener {
             }
         }
     }
+
 
     private void mejorarPala(Player jugador) {
         ItemStack palaActual = jugador.getInventory().getItemInMainHand();

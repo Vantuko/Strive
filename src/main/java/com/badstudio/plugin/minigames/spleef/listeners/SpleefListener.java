@@ -132,7 +132,6 @@ public class SpleefListener implements Listener {
             }
         }
     }
-
     private void mejorarPala(Player jugador) {
         ItemStack palaActual = jugador.getInventory().getItemInMainHand();
         Material siguientePala = null;

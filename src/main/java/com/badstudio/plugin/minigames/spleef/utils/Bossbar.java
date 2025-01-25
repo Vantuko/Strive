@@ -23,8 +23,9 @@ public class Bossbar {
         this.plugin = plugin;
         this.tiempoInicial = tiempoInicial;
         this.tiempoRestante = tiempoInicial;
+    }
 
-        // Evita duplicados verificando si ya existe una BossBar para el jugador
+    public void Inicio() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.getWorld().getName().equalsIgnoreCase("Spleef") && !bossbars.containsKey(player)) {
                 BossBar bossBar = Bukkit.createBossBar(
@@ -36,9 +37,6 @@ public class Bossbar {
                 bossbars.put(player, bossBar);
             }
         }
-    }
-
-    public void Inicio() {
         task = new BukkitRunnable() {
             @Override
             public void run() {
@@ -46,7 +44,6 @@ public class Bossbar {
                     Finalizacion();
                     return;
                 }
-
                 // Actualiza cada barra individualmente
                 for (Map.Entry<Player, BossBar> entry : bossbars.entrySet()) {
                     BossBar bossBar = entry.getValue();

@@ -169,7 +169,6 @@ public class Spleef implements CommandExecutor {
             }
         }
     }
-
     private void darPala(Player player) {
         ItemStack palaPiedra = new ItemStack(Material.STONE_SHOVEL);
         ItemMeta palaPiedraMeta = palaPiedra.getItemMeta();

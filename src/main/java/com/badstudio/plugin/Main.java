@@ -4,7 +4,7 @@ import com.badstudio.plugin.commands.StriveTabCompleter;
 import com.badstudio.plugin.listeners.Events;
 import com.badstudio.plugin.minigames.spleef.Spleef;
 import com.badstudio.plugin.minigames.spleef.listeners.GhostPlayerListener;
-import com.badstudio.plugin.minigames.spleef.listeners.LaPala;
+import com.badstudio.plugin.minigames.spleef.listeners.SpleefListener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.badstudio.plugin.commands.StriveComandos;
@@ -33,7 +33,7 @@ public final class Main extends JavaPlugin {
         //Registro de eventos
         PluginManager pm = Bukkit.getServer().getPluginManager();
         pm.registerEvents(new Events(), this);
-        pm.registerEvents(new LaPala(this, ghostPlayerListener), this);
+        pm.registerEvents(new SpleefListener(ghostPlayerListener), this);
         pm.registerEvents(new GhostPlayerListener(this), this);
     }
 

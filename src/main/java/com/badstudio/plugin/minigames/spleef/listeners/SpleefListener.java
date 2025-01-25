@@ -1,6 +1,5 @@
 package com.badstudio.plugin.minigames.spleef.listeners;
 
-import com.badstudio.plugin.Main;
 import com.badstudio.plugin.minigames.spleef.Spleef;
 
 import net.md_5.bungee.api.ChatMessageType;
@@ -15,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -25,14 +25,12 @@ import java.util.HashMap;
 import java.util.UUID;
 
 
-public class LaPala implements Listener {
-    private final Main plugin;
+public class SpleefListener implements Listener {
     private final HashMap<UUID, Integer> bloquesDestruidos = new HashMap<>();
     private static final int finalBlock = 20;
     private final GhostPlayerListener ghostPlayerListener;
 
-    public LaPala(Main plugin, GhostPlayerListener ghostPlayerListener) {
-        this.plugin = plugin;
+    public SpleefListener(GhostPlayerListener ghostPlayerListener) {
         this.ghostPlayerListener = ghostPlayerListener;
     }
 
@@ -123,6 +121,14 @@ public class LaPala implements Listener {
                 if(e.getEntity() instanceof Player){
                     e.setCancelled(true);
                 }
+            }
+        }
+    }
+    @EventHandler
+    public void blockCraft(PrepareItemCraftEvent e) {
+        if (Spleef.isJuegoActivo()) {
+            if (e.getRecipe() != null && e.getRecipe().getResult().getType() == Material.SNOW_BLOCK) {
+                e.getInventory().setResult(null);
             }
         }
     }

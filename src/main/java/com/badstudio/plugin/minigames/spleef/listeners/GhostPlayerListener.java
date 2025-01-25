@@ -114,7 +114,8 @@ public class GhostPlayerListener implements Listener {
         Player player = event.getPlayer();
         double damagePerSecond = plugin.getConfig().getDouble("spleef.world_border.damage_per_second");
         WorldBorder border = player.getWorld().getWorldBorder();
-        double remainingHealth = player.getHealth() - (damagePerSecond / 20.0);
+        double remainingHealth = player.getHealth() - damagePerSecond / 20.0;
+
 
         if (!border.isInside(player.getLocation())) {
             if(remainingHealth > 0){
@@ -122,7 +123,7 @@ public class GhostPlayerListener implements Listener {
                 int timeLeft = (int) Math.ceil(remainingHealth / (damagePerSecond / 20.0));
                 TextComponent advertencia = new TextComponent(
                         ChatColor.RED + "⚠ " + ChatColor.YELLOW + "Tiempo fuera del borde: " +
-                                ChatColor.GOLD + timeLeft + "s ⚠");
+                                ChatColor.GOLD + timeLeft + "s" + ChatColor.RED + " ⚠");
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, advertencia);
             }
         }
@@ -162,8 +163,10 @@ public class GhostPlayerListener implements Listener {
 
         player.removeMetadata("ghost", plugin);
         ghostPlayers.remove(player.getUniqueId());
-        player.setInvisible(false); // Asegura visibilidad
+        player.setInvisible(false);
+        player.setGameMode(GameMode.SURVIVAL); // Restablece el modo de juego
     }
+
 
 
 

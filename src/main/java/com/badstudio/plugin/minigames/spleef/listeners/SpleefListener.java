@@ -74,21 +74,19 @@ public class SpleefListener implements Listener {
                 // Actualiza la barra de acción
                 TextComponent mensaje;
                 ItemStack itemEnMano = jugador.getInventory().getItemInMainHand();
-                if (itemEnMano.getType() == Material.DIAMOND_SHOVEL &&
-                        itemEnMano.containsEnchantment(Enchantment.EFFICIENCY) &&
-                        itemEnMano.getEnchantmentLevel(Enchantment.EFFICIENCY) == 5) {
-                    mensaje = new TextComponent(ChatColor.RED + "" + ChatColor.BOLD + "[MAX]");
-                } else {
-                    mensaje = new TextComponent(ChatColor.AQUA + "" + ChatColor.BOLD + "[" + bloquesActuales + "/" + finalBlock + "]");
-                }
+                mensaje = new TextComponent(ChatColor.AQUA + "" + ChatColor.BOLD + "[" + bloquesActuales + "/" + finalBlock + "]");
+
 
                 jugador.spigot().sendMessage(ChatMessageType.ACTION_BAR, mensaje);
 
                 // Verifica si se alcanzó el límite de bloques para mejorar la pala
                 if (bloquesActuales >= finalBlock) {
-                    jugador.getInventory().addItem(new ItemStack(Material.SNOWBALL, 1));
-                    jugador.playSound(jugador, Sound.ITEM_BUCKET_EMPTY_POWDER_SNOW, 1, 2);
-                    mejorarPala(jugador);
+                    if (herramientaEnMano.getType() == Material.STONE_SHOVEL) {
+                        mejorarPala(jugador);
+                    } else if (herramientaEnMano.getType() == Material.DIAMOND_SHOVEL) {
+                        jugador.getInventory().addItem(new ItemStack(Material.SNOWBALL, 1));
+                        jugador.playSound(jugador.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.7F, 0.9F);
+                    }
                     bloquesDestruidos.put(jugadorID, 0); // Reinicia el contador
                 }
             }

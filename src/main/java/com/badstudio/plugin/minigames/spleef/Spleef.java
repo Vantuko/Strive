@@ -99,13 +99,16 @@ public class Spleef implements CommandExecutor {
                 }
 
                 if (tiempoRestante == 0) {
+                    bossbar = new Bossbar(plugin, tiempoTotal);
+
                     for (Player jugador : mundo.getPlayers()) {
                         jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_BIT, 1, 2);
                         jugador.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 3, 0));
 
+                        bossbar.agregarBossbar(jugador);
+
                         Bukkit.getScheduler().runTaskLater(plugin, () -> {
                             darPala(jugador);
-                            bossbar = new Bossbar(plugin, tiempoTotal);
                             bossbar.Inicio();
                             inicializarBorde(mundo);
                         }, 20 * 3L);

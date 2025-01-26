@@ -23,26 +23,23 @@ public class Bossbar {
         this.plugin = plugin;
         this.tiempoInicial = tiempoInicial;
         this.tiempoRestante = tiempoInicial;
-
-        // Evita duplicados verificando si ya existe una BossBar para el jugador
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.getWorld().getName().equalsIgnoreCase("Spleef") && !bossbars.containsKey(player)) {
-                BossBar bossBar = Bukkit.createBossBar(
-                        ChatColor.AQUA + "Tiempo restante: " + Tiempo(tiempoRestante),
-                        BarColor.BLUE,
-                        BarStyle.SOLID
-                );
-                bossBar.addPlayer(player);
-                bossbars.put(player, bossBar);
-            }
-        }
     }
 
+    public void agregarBossbar(Player jugador) {
+        if (!bossbars.containsKey(jugador)) {
+            BossBar bossBar = Bukkit.createBossBar(
+                    ChatColor.AQUA + "Tiempo restante: " + Tiempo(tiempoRestante),
+                     BarColor.BLUE,
+                     BarStyle.SOLID
+            );
+            bossBar.addPlayer(jugador);
+            bossbars.put(jugador,bossBar);
+        }
+    }
     public void Inicio() {
         if (task != null && !task.isCancelled()) {
-            return; // Evita crear múltiples tareas
+            return;
         }
-
         task = new BukkitRunnable() {
             @Override
             public void run() {
@@ -50,35 +47,27 @@ public class Bossbar {
                     Finalizacion();
                     return;
                 }
-
                 for (Map.Entry<Player, BossBar> entry : bossbars.entrySet()) {
                     BossBar bossBar = entry.getValue();
                     bossBar.setTitle(ChatColor.AQUA + "Tiempo restante: " + Tiempo(tiempoRestante));
                     double progress = Math.max(0.0, Math.min(1.0, (double) tiempoRestante / tiempoInicial));
                     bossBar.setProgress(progress);
                 }
-
                 tiempoRestante--;
             }
         };
-
         task.runTaskTimer(plugin, 0L, 20L);
     }
-
-
     public void Finalizacion() {
         if (task != null) {
             task.cancel();
         }
-
-        // Elimina las barras de todos los jugadores
         for (BossBar bossBar : bossbars.values()) {
             bossBar.setVisible(false);
             bossBar.removeAll();
         }
         bossbars.clear();
     }
-
     private String Tiempo(int segundos) {
         int minutos = segundos / 60;
         int seg = segundos % 60;

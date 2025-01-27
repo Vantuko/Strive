@@ -1,9 +1,12 @@
 package com.badstudio.plugin.minigames.spleef.listeners;
 
 import com.badstudio.plugin.minigames.spleef.Spleef;
-
 import com.badstudio.plugin.minigames.spleef.utils.ScoreManager;
+
 import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.ChatColor;
+
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -19,8 +22,6 @@ import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.projectiles.ProjectileSource;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.ChatColor;
 
 import java.util.*;
 
@@ -28,7 +29,7 @@ public class GhostPlayerListener implements Listener {
 
     public final Set<UUID> ghostPlayers = new HashSet<>();
     public final HashMap<UUID, UUID> blockBreakers = new HashMap<>();
-    private static final int LAYER_Y = 54; // Capa de caída
+    private static final int LAYER_Y = 54;
     private static final Location TELEPORT_LOCATION = new Location(Bukkit.getWorld("Spleef"), 0, 144, 0); // Configura la ubicación de teletransporte
     private final JavaPlugin plugin;
     private final Map<UUID, Long> lastBlockBreakTime = new HashMap<>();

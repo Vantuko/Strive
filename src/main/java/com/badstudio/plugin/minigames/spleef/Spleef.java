@@ -29,16 +29,12 @@ public class Spleef implements CommandExecutor {
     private Bossbar bossbar;
     private static boolean juegoActivo = false;
 
-
-
     public Spleef(Main plugin) {
         this.plugin = plugin;
     }
-
     public static boolean isJuegoActivo() {
         return juegoActivo;
     }
-
     public static void setJuegoActivo(boolean estado) {
         juegoActivo = estado;
     }
@@ -53,7 +49,6 @@ public class Spleef implements CommandExecutor {
                 return true;
             }
 
-            // Cambia el estado del juego a activo
             setJuegoActivo(true);
 
             int x1 = plugin.getConfig().getInt("spleef.pos1.x1");
@@ -78,7 +73,6 @@ public class Spleef implements CommandExecutor {
         }
         return true;
     }
-
     private void inicio(World mundo, int x1, int y1, int z1, int x2, int y2, int z2) {
         final int tiempoTotal = plugin.getConfig().getInt("spleef.duracionJuego");
         ScoreManager ScoreManager = new ScoreManager();
@@ -97,7 +91,6 @@ public class Spleef implements CommandExecutor {
                         jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_HAT, 1, 1);
                     }
                 }
-
                 if (tiempoRestante == 0) {
                     bossbar = new Bossbar(plugin, tiempoTotal);
 
@@ -116,7 +109,6 @@ public class Spleef implements CommandExecutor {
 
                     destruirBloques(mundo, x1, y1, z1, x2, y2, z2);
 
-
                     Bukkit.getScheduler().runTaskLater(plugin, () -> {
                         setJuegoActivo(false);
 
@@ -126,6 +118,7 @@ public class Spleef implements CommandExecutor {
                                 manejoClaseGhost.disableGhostMode(ghostPlayer);
                             }
                         }
+
                         manejoClaseGhost.ghostPlayers.clear();
 
                         for (Player jugador : mundo.getPlayers()) {
@@ -136,9 +129,7 @@ public class Spleef implements CommandExecutor {
                                     inventory.remove(item);
                                 }
                             }
-
                         }
-
                         guardarMapa.restaurarMapa(mundo);
                         guardarMapa.limpiarDatos();
                         bossbar.Finalizacion();
@@ -149,7 +140,6 @@ public class Spleef implements CommandExecutor {
             }
         }.runTaskTimer(plugin, 0L, 20L);
     }
-
     private void destruirBloques(World mundo, int x1, int y1, int z1, int x2, int y2, int z2) {
         int minX = Math.min(x1, x2);
         int maxX = Math.max(x1, x2);
@@ -167,7 +157,6 @@ public class Spleef implements CommandExecutor {
             }
         }
     }
-
     public void inicializarBorde(World mundo) {
         int initialSize = plugin.getConfig().getInt("spleef.world_border.initial_size");
         int finalSize = plugin.getConfig().getInt("spleef.world_border.final_size");
@@ -181,8 +170,6 @@ public class Spleef implements CommandExecutor {
 
         border.setSize(finalSize, shrinkTime); // Achicar el borde
     }
-
-
     private void darPala(Player player) {
         ItemStack palaPiedra = new ItemStack(Material.STONE_SHOVEL);
         ItemMeta palaPiedraMeta = palaPiedra.getItemMeta();
@@ -192,7 +179,6 @@ public class Spleef implements CommandExecutor {
         palaPiedra.setItemMeta(palaPiedraMeta);
         player.getInventory().setItem(0, palaPiedra);
     }
-
     private void mostrarMensajeSpleef() {
         String mensaje = ChatColor.translateAlternateColorCodes('&',
                 "------------\n" +

@@ -6,11 +6,13 @@ public class Config {
 
     private final JavaPlugin plugin;
 
+    //Método para guardar la configuración
     public Config(JavaPlugin plugin) {
         this.plugin = plugin;
 
         plugin.saveDefaultConfig();
     }
+    //Registro de configuraciones
     public int maximoJugadoresPurga() {
         return plugin.getConfig().getInt("purga.jugadores_maximos");
     }

@@ -18,7 +18,7 @@ public class StriveTabCompleter implements TabCompleter {
     public StriveTabCompleter(Main plugin) {
         this.plugin = plugin;
     }
-
+    //Método para tablistear argumentos de los comandos
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, Command command, @NotNull String alias, String[] args){
 

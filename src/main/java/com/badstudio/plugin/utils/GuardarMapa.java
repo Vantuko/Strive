@@ -13,6 +13,7 @@ import java.util.Map;
 public class GuardarMapa {
     private final Map<Vector, Material> bloquesOriginales = new HashMap<>();
 
+    //Registro de coordenadas
     public void guardarMapa(World mundo, int x1, int y1, int z1, int x2, int y2, int z2) {
         int minX = Math.min(x1, x2);
         int maxX = Math.max(x1, x2);
@@ -31,6 +32,7 @@ public class GuardarMapa {
         }
         Bukkit.getLogger().info(ChatColor.GREEN + "Mapa guardado en memoria. Total de bloques: " + bloquesOriginales.size());
     }
+    //Método para restaurar el mapa
     public void restaurarMapa(World mundo) {
         if (bloquesOriginales.isEmpty()) {
             Bukkit.getLogger().info("No hay bloques guardados para restaurar.");
@@ -45,7 +47,7 @@ public class GuardarMapa {
         }
         Bukkit.getLogger().info(ChatColor.GREEN + "Mapa restaurado correctamente. Bloques restaurados: " + bloquesOriginales.size());
     }
-
+    //Método para limpiar datos de los bloques guardados
     public void limpiarDatos() {
         bloquesOriginales.clear();
         Bukkit.getLogger().info("Datos de bloques en memoria limpiados.");

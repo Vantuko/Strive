@@ -1,9 +1,11 @@
 package com.badstudio.plugin.minigames.spleef.listeners;
 
-import com.badstudio.plugin.Main;
 import com.badstudio.plugin.minigames.spleef.Spleef;
 
 import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.ChatColor;
+
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
@@ -13,15 +15,10 @@ import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.ChatColor;
-
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -31,23 +28,23 @@ public class SpleefListener implements Listener {
     private final HashMap<UUID, Integer> bloquesDestruidos = new HashMap<>();
     private static final int finalBlock = 20;
     private final GhostPlayerListener ghostPlayerListener;
-    private final Main plugin;
 
-    public SpleefListener(GhostPlayerListener ghostPlayerListener, Main plugin) {
+
+    public SpleefListener(GhostPlayerListener ghostPlayerListener) {
         this.ghostPlayerListener = ghostPlayerListener;
-        this.plugin = plugin;
     }
 
-
+    //Evento al romper la nieve
     @EventHandler
     public void onBreakSnow(BlockBreakEvent e) {
+        //Verifica si el juego está activo
         if (!Spleef.isJuegoActivo()) {
             return;
         }
+        //Verifica si está en el mundo correcto
         World mundo = Bukkit.getWorld("Spleef");
-
         if (mundo != null && e.getBlock().getWorld().equals(mundo)) {
-            // Evita que fantasmas rompan bloques
+            // Evita que fantasmas rompan los bloques
             if (ghostPlayerListener.getGhostPlayers().contains(e.getPlayer().getUniqueId())) {
                 e.setCancelled(true);
                 return;
@@ -60,7 +57,7 @@ public class SpleefListener implements Listener {
                 e.getPlayer().sendMessage(ChatColor.RED + "¡Usa una pala para romper los bloques!");
                 return;
             }
-
+            //Evita que tire items al romper la nieve
             if (e.getBlock().getType() == Material.SNOW_BLOCK) {
                 e.setDropItems(false);
 
@@ -71,9 +68,8 @@ public class SpleefListener implements Listener {
                 bloquesDestruidos.put(jugadorID, bloquesDestruidos.getOrDefault(jugadorID, 0) + 1);
                 int bloquesActuales = bloquesDestruidos.get(jugadorID);
 
-                // Actualiza la barra de acción
+                // Actualiza la action bar
                 TextComponent mensaje;
-                ItemStack itemEnMano = jugador.getInventory().getItemInMainHand();
                 mensaje = new TextComponent(ChatColor.AQUA + "" + ChatColor.BOLD + "[" + bloquesActuales + "/" + finalBlock + "]");
 
 
@@ -95,7 +91,7 @@ public class SpleefListener implements Listener {
         }
     }
 
-
+    //Evento al tirar una bola de nieve
     @EventHandler
     public void onSnowballThrow(ProjectileHitEvent e) {
         Projectile snowBall = e.getEntity();
@@ -105,7 +101,7 @@ public class SpleefListener implements Listener {
 
                 if (mundo.getName().equalsIgnoreCase("Spleef")) {
                     Block blockBreak = e.getHitBlock();
-
+                    //Al tirar una bola de nieve a un bloque de nieve, este desaparece
                     if (blockBreak != null && blockBreak.getType() == Material.SNOW_BLOCK) {
                         blockBreak.setType(Material.AIR);
                     }
@@ -115,39 +111,32 @@ public class SpleefListener implements Listener {
             }
         }
     }
-
-    @EventHandler
-    public void onPlayerHitPlayer(EntityDamageEvent e){
-        if(e.getEntity().getWorld().equals("Spleef")){
-            if(Spleef.isJuegoActivo()){
-                if(e.getEntity() instanceof Player){
-                    e.setCancelled(true);
-                }
-            }
-        }
-    }
-
-
+    //Evento al craftear un bloque de nieve
     @EventHandler
     public void blockCraft(PrepareItemCraftEvent e) {
         if (Spleef.isJuegoActivo()) {
+            //Evita que se pueda craftear un bloque de nieve
             if (e.getRecipe() != null && e.getRecipe().getResult().getType() == Material.SNOW_BLOCK) {
                 e.getInventory().setResult(null);
             }
         }
     }
 
-
+    //Evento para la mejora de la pala
     private void mejorarPala(Player jugador) {
         ItemStack palaActual = jugador.getInventory().getItemInMainHand();
         Material siguientePala = null;
 
         switch (palaActual.getType()) {
+            //Cuando la pala es de piedra
             case STONE_SHOVEL:
                 siguientePala = Material.DIAMOND_SHOVEL;
+                //Añade un sonido
                 jugador.playSound(jugador.getLocation(), Sound.ENTITY_ITEM_BREAK, 0.27F, 1);
                 break;
+            //Cuando la pala es de diamante
             case DIAMOND_SHOVEL:
+                //Añade eficiencia a la pala de diamante
                 int eficienciaActual = palaActual.getEnchantmentLevel(Enchantment.EFFICIENCY);
                 if (eficienciaActual < 5) {
                     agregarEficiencia(palaActual, eficienciaActual + 1);
@@ -155,7 +144,7 @@ public class SpleefListener implements Listener {
                 }
                 return;
         }
-
+        //Añade al inventario la pala
         if (siguientePala != null) {
             ItemStack nuevaPala = new ItemStack(siguientePala);
             ItemMeta meta = nuevaPala.getItemMeta();
@@ -166,7 +155,7 @@ public class SpleefListener implements Listener {
             jugador.getInventory().setItemInMainHand(nuevaPala);
         }
     }
-
+    //Método para agregar eficiencia a la pala de diamante
     private void agregarEficiencia(ItemStack pala, int nivelEficiencia) {
         ItemMeta meta = pala.getItemMeta();
         if (meta != null) {

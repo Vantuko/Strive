@@ -24,7 +24,7 @@ public class Bossbar {
         this.tiempoInicial = tiempoInicial;
         this.tiempoRestante = tiempoInicial;
     }
-
+    //Método para añadir la bossbar<
     public void agregarBossbar(Player jugador) {
         if (!bossbars.containsKey(jugador)) {
             BossBar bossBar = Bukkit.createBossBar(
@@ -36,6 +36,7 @@ public class Bossbar {
             bossbars.put(jugador,bossBar);
         }
     }
+    //Configura al inicio la bossbar
     public void Inicio() {
         if (task != null && !task.isCancelled()) {
             return;
@@ -58,6 +59,7 @@ public class Bossbar {
         };
         task.runTaskTimer(plugin, 0L, 20L);
     }
+    //Remueve la bossbar cuando termine el tiempo
     public void Finalizacion() {
         if (task != null) {
             task.cancel();
@@ -68,6 +70,7 @@ public class Bossbar {
         }
         bossbars.clear();
     }
+    //Método para configurar el tiempo de la bossbar
     private String Tiempo(int segundos) {
         int minutos = segundos / 60;
         int seg = segundos % 60;

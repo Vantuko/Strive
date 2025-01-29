@@ -2,8 +2,9 @@ package com.badstudio.plugin.minigames.spleef;
 
 import com.badstudio.plugin.Main;
 import com.badstudio.plugin.minigames.spleef.listeners.GhostPlayerListener;
+import com.badstudio.plugin.minigames.spleef.utils.BlockRemover;
 import com.badstudio.plugin.minigames.spleef.utils.Bossbar;
-import com.badstudio.plugin.minigames.spleef.utils.ScoreManager;
+import com.badstudio.plugin.minigames.spleef.utils.ScoreboardManager;
 import com.badstudio.plugin.utils.GuardarMapa;
 
 import org.bukkit.*;
@@ -75,8 +76,16 @@ public class Spleef implements CommandExecutor {
     }
     private void inicio(World mundo, int x1, int y1, int z1, int x2, int y2, int z2) {
         final int tiempoTotal = plugin.getConfig().getInt("spleef.duracionJuego");
-        ScoreManager ScoreManager = new ScoreManager();
+        ScoreboardManager ScoreManager = new ScoreboardManager();
         GhostPlayerListener manejoClaseGhost = new GhostPlayerListener(plugin, ScoreManager);
+
+        // Asegurarse de que todos los jugadores estén en modo SURVIVAL
+        for (Player jugador : mundo.getPlayers()) {
+            jugador.setGameMode(GameMode.SURVIVAL);
+        }
+
+        // Iniciar el BlockRemover
+        BlockRemover blockRemover = new BlockRemover(plugin, mundo, x1, x2, y1, y2, z1, z2);
 
         new BukkitRunnable() {
             private int tiempoRestante = plugin.getConfig().getInt("spleef.duracionInicio");
@@ -104,6 +113,7 @@ public class Spleef implements CommandExecutor {
                             darPala(jugador);
                             bossbar.Inicio();
                             inicializarBorde(mundo);
+                            blockRemover.start();
                         }, 20 * 3L);
                     }
 
@@ -112,14 +122,7 @@ public class Spleef implements CommandExecutor {
                     Bukkit.getScheduler().runTaskLater(plugin, () -> {
                         setJuegoActivo(false);
 
-                        for (UUID ghostPlayerId : new HashSet<>(manejoClaseGhost.ghostPlayers)) {
-                            Player ghostPlayer = Bukkit.getPlayer(ghostPlayerId);
-                            if (ghostPlayer != null) {
-                                manejoClaseGhost.disableGhostMode(ghostPlayer);
-                            }
-                        }
-
-                        manejoClaseGhost.ghostPlayers.clear();
+                        manejoClaseGhost.reiniciarEspectadores(); // Restaurar espectadores
 
                         for (Player jugador : mundo.getPlayers()) {
                             Inventory inventory = jugador.getInventory();

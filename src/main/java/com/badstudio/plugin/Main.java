@@ -4,6 +4,7 @@ import com.badstudio.plugin.commands.StriveTabCompleter;
 import com.badstudio.plugin.listeners.Events;
 import com.badstudio.plugin.minigames.spleef.Spleef;
 import com.badstudio.plugin.commands.StriveComandos;
+import com.badstudio.plugin.minigames.spleef.SpleefStop;
 import com.badstudio.plugin.minigames.spleef.listeners.SpleefListener;
 import com.badstudio.plugin.utils.Config;
 
@@ -30,7 +31,7 @@ public final class Main extends JavaPlugin {
         Objects.requireNonNull(getCommand("strive")).setExecutor(new StriveComandos(this));
         Objects.requireNonNull(getCommand("spleef")).setExecutor(new Spleef(this));
         Objects.requireNonNull(getCommand("strive")).setTabCompleter(new StriveTabCompleter(this));
-
+        Objects.requireNonNull(getCommand("spleefstop")).setExecutor(new SpleefStop());
         // Registro de eventos
         PluginManager pm = Bukkit.getServer().getPluginManager();
         pm.registerEvents(new Events(), this);

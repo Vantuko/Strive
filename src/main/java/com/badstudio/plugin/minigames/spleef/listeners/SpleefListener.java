@@ -27,12 +27,6 @@ import java.util.UUID;
 public class SpleefListener implements Listener {
     private final HashMap<UUID, Integer> bloquesDestruidos = new HashMap<>();
     private static final int finalBlock = 20;
-    private final GhostPlayerListener ghostPlayerListener;
-
-
-    public SpleefListener(GhostPlayerListener ghostPlayerListener) {
-        this.ghostPlayerListener = ghostPlayerListener;
-    }
 
     //Evento al romper la nieve
     @EventHandler
@@ -44,12 +38,6 @@ public class SpleefListener implements Listener {
         //Verifica si está en el mundo correcto
         World mundo = Bukkit.getWorld("Spleef");
         if (mundo != null && e.getBlock().getWorld().equals(mundo)) {
-            // Evita que fantasmas rompan los bloques
-            if (ghostPlayerListener.getGhostPlayers().contains(e.getPlayer().getUniqueId())) {
-                e.setCancelled(true);
-                return;
-            }
-
             // Verifica que solo se pueda usar una pala para romper
             ItemStack herramientaEnMano = e.getPlayer().getInventory().getItemInMainHand();
             if (herramientaEnMano.getType() != Material.STONE_SHOVEL && herramientaEnMano.getType() != Material.DIAMOND_SHOVEL) {

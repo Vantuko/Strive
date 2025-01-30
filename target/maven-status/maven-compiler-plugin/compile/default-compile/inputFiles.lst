@@ -6,7 +6,9 @@ C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\plugin\minig
 C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\plugin\minigames\spleef\listeners\GhostPlayerListener.java
 C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\plugin\minigames\spleef\listeners\SpleefListener.java
 C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\plugin\minigames\spleef\Spleef.java
+C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\plugin\minigames\spleef\utils\BlockRemover.java
 C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\plugin\minigames\spleef\utils\Bossbar.java
-C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\plugin\minigames\spleef\utils\ScoreManager.java
+C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\plugin\minigames\spleef\utils\BrokenBlock.java
+C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\plugin\minigames\spleef\utils\ScoreboardManager.java
 C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\plugin\utils\Config.java
 C:\Users\Usuario\IdeaProjects\BadStudio\src\main\java\com\badstudio\plugin\utils\GuardarMapa.java

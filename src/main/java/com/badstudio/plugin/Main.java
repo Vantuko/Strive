@@ -3,10 +3,7 @@ package com.badstudio.plugin;
 import com.badstudio.plugin.commands.StriveTabCompleter;
 import com.badstudio.plugin.listeners.Events;
 import com.badstudio.plugin.minigames.spleef.Spleef;
-import com.badstudio.plugin.minigames.spleef.listeners.GhostPlayerListener;
-import com.badstudio.plugin.minigames.spleef.listeners.SpleefListener;
 import com.badstudio.plugin.commands.StriveComandos;
-import com.badstudio.plugin.minigames.spleef.utils.ScoreboardManager;
 import com.badstudio.plugin.utils.Config;
 
 import org.bukkit.plugin.PluginManager;
@@ -28,10 +25,6 @@ public final class Main extends JavaPlugin {
         // Registro de la config
         config = new Config(this);
 
-        // Adicional registro de eventos
-        ScoreboardManager scoreManager = new ScoreboardManager();
-        GhostPlayerListener ghostPlayerListener = new GhostPlayerListener(this, scoreManager);
-
         // Registro de comandos
         Objects.requireNonNull(getCommand("strive")).setExecutor(new StriveComandos(this));
         Objects.requireNonNull(getCommand("spleef")).setExecutor(new Spleef(this));
@@ -40,8 +33,6 @@ public final class Main extends JavaPlugin {
         // Registro de eventos
         PluginManager pm = Bukkit.getServer().getPluginManager();
         pm.registerEvents(new Events(), this);
-        pm.registerEvents(new SpleefListener(ghostPlayerListener), this);
-        pm.registerEvents(ghostPlayerListener, this);
     }
 
     //Finalización del plugin
@@ -49,7 +40,6 @@ public final class Main extends JavaPlugin {
     public void onDisable() {
         getLogger().info("El plugin ha sido deshabilitado");
     }
-
 
     public Config getConfigs() {
         return config;

@@ -25,6 +25,7 @@ spleef:
     z2: -30
   duracionInicio: 11 # (Segundos) No se incluye el último número Ej. Pones 10 pero empieza en 9
   duracionJuego: 300 # (Segundos) No incluyas la duracion del inicio
+  spectator_limit: 10 # Límite en bloques para los espectadores
   world_border:
     initial_size: 100
     final_size: 10

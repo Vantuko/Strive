@@ -32,6 +32,7 @@ public final class Main extends JavaPlugin {
         Objects.requireNonNull(getCommand("spleef")).setExecutor(new Spleef(this));
         Objects.requireNonNull(getCommand("strive")).setTabCompleter(new StriveTabCompleter(this));
         Objects.requireNonNull(getCommand("spleefstop")).setExecutor(new SpleefStop());
+
         // Registro de eventos
         PluginManager pm = Bukkit.getServer().getPluginManager();
         pm.registerEvents(new Events(), this);

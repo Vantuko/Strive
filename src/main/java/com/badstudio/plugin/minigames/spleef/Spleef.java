@@ -43,8 +43,12 @@ public class Spleef implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "Este comando solo puede ser ejecutado por un jugador.");
                 return true;
             }
-
             setJuegoActivo(true);
+
+            // Asegurarse de que todos los jugadores estén en modo Aventura
+            for (Player jugador : mundo.getPlayers()) {
+                jugador.setGameMode(GameMode.ADVENTURE);
+            }
 
             int x1 = plugin.getConfig().getInt("spleef.pos1.x1");
             int y1 = plugin.getConfig().getInt("spleef.pos1.y1");
@@ -71,11 +75,6 @@ public class Spleef implements CommandExecutor {
     private void inicio(World mundo, int x1, int y1, int z1, int x2, int y2, int z2) {
         final int tiempoTotal = plugin.getConfig().getInt("spleef.duracionJuego");
 
-        // Asegurarse de que todos los jugadores estén en modo SURVIVAL
-        for (Player jugador : mundo.getPlayers()) {
-            jugador.setGameMode(GameMode.SURVIVAL);
-        }
-
         new BukkitRunnable() {
             private int tiempoRestante = plugin.getConfig().getInt("spleef.duracionInicio");
 
@@ -91,6 +90,10 @@ public class Spleef implements CommandExecutor {
                 }
                 if (tiempoRestante == 0) {
                     bossbar = new Bossbar(plugin, tiempoTotal);
+
+                    for (Player jugador : mundo.getPlayers()) {
+                        jugador.setGameMode(GameMode.SURVIVAL);
+                    }
 
                     for (Player jugador : mundo.getPlayers()) {
                         jugador.playSound(jugador, Sound.BLOCK_NOTE_BLOCK_BIT, 1, 2);

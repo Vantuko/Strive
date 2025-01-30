@@ -4,7 +4,7 @@ import com.badstudio.plugin.commands.StriveTabCompleter;
 import com.badstudio.plugin.listeners.Events;
 import com.badstudio.plugin.minigames.spleef.Spleef;
 import com.badstudio.plugin.commands.StriveComandos;
-import com.badstudio.plugin.minigames.spleef.SpleefStop;
+import com.badstudio.plugin.minigames.spleef.commands.SpleefStop;
 import com.badstudio.plugin.minigames.spleef.listeners.SpleefListener;
 import com.badstudio.plugin.utils.Config;
 

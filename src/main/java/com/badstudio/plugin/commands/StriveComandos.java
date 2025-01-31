@@ -1,6 +1,7 @@
 package com.badstudio.plugin.commands;
 
 import com.badstudio.plugin.Main;
+import com.badstudio.plugin.minigames.spleef.Spleef;
 
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -12,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -139,6 +141,14 @@ public class StriveComandos implements CommandExecutor {
         player.sendMessage(ChatColor.RED + "-- Comandos --");
         player.sendMessage(ChatColor.GOLD + "/strive host");
         player.sendMessage(ChatColor.GOLD + "/strive reload");
+    }
+    public static void TP(List<Player> jugadores, String mundo, int X, int Y, int Z) {
+        for (Player jugador : jugadores ) {
+            jugadores = new ArrayList<>(Bukkit.getOnlinePlayers());
+            if (Spleef.isJuegoActivo()){
+                StriveComandos.TP(jugadores, "Spleef", 0, 156, 0);
+            }
+        }
     }
 }
 

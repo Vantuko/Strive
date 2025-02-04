@@ -25,6 +25,7 @@ import java.util.UUID;
 
 
 public class SpleefListener implements Listener {
+
     private final HashMap<UUID, Integer> bloquesDestruidos = new HashMap<>();
     private static final int finalBlock = 20;
 
@@ -84,7 +85,7 @@ public class SpleefListener implements Listener {
     public void onSnowballThrow(ProjectileHitEvent e) {
         Projectile snowBall = e.getEntity();
         if (snowBall instanceof Snowball) {
-            if(Spleef.isJuegoActivo()){
+            if (Spleef.isJuegoActivo()) {
                 World mundo = snowBall.getWorld();
 
                 if (mundo.getName().equalsIgnoreCase("Spleef")) {
@@ -99,6 +100,7 @@ public class SpleefListener implements Listener {
             }
         }
     }
+
     //Evento al craftear un bloque de nieve
     @EventHandler
     public void blockCraft(PrepareItemCraftEvent e) {
@@ -109,46 +111,27 @@ public class SpleefListener implements Listener {
             }
         }
     }
-
-    //Evento para la mejora de la pala
+    //Método para mejorar la pala
     private void mejorarPala(Player jugador) {
         ItemStack palaActual = jugador.getInventory().getItemInMainHand();
-        Material siguientePala = null;
+        Material tipoPala = palaActual.getType();
 
-        switch (palaActual.getType()) {
-            //Cuando la pala es de piedra
-            case STONE_SHOVEL:
-                siguientePala = Material.DIAMOND_SHOVEL;
-                //Añade un sonido
-                jugador.playSound(jugador.getLocation(), Sound.ENTITY_ITEM_BREAK, 0.27F, 1);
-                break;
-            //Cuando la pala es de diamante
-            case DIAMOND_SHOVEL:
-                //Añade eficiencia a la pala de diamante
-                int eficienciaActual = palaActual.getEnchantmentLevel(Enchantment.EFFICIENCY);
-                if (eficienciaActual < 5) {
-                    agregarEficiencia(palaActual, eficienciaActual + 1);
-                    jugador.playSound(jugador.getLocation(), Sound.ENTITY_ITEM_BREAK, 0.27F, 1);
-                }
-                return;
-        }
-        //Añade al inventario la pala
-        if (siguientePala != null) {
-            ItemStack nuevaPala = new ItemStack(siguientePala);
+        if (tipoPala == Material.STONE_SHOVEL) {
+            ItemStack nuevaPala = new ItemStack(Material.DIAMOND_SHOVEL);
             ItemMeta meta = nuevaPala.getItemMeta();
             if (meta != null) {
                 meta.setUnbreakable(true);
                 nuevaPala.setItemMeta(meta);
             }
             jugador.getInventory().setItemInMainHand(nuevaPala);
-        }
-    }
-    //Método para agregar eficiencia a la pala de diamante
-    private void agregarEficiencia(ItemStack pala, int nivelEficiencia) {
-        ItemMeta meta = pala.getItemMeta();
-        if (meta != null) {
-            meta.addEnchant(Enchantment.EFFICIENCY, nivelEficiencia, true);
-            pala.setItemMeta(meta);
+            jugador.playSound(jugador.getLocation(), Sound.ENTITY_ITEM_BREAK, 0.27F, 1);
+        } else if (tipoPala == Material.DIAMOND_SHOVEL) {
+            int eficienciaActual = palaActual.getEnchantmentLevel(Enchantment.EFFICIENCY);
+            if (eficienciaActual < 5) {
+                palaActual.addUnsafeEnchantment(Enchantment.EFFICIENCY, eficienciaActual + 1);
+                jugador.getInventory().setItemInMainHand(palaActual);
+                jugador.playSound(jugador.getLocation(), Sound.ENTITY_ITEM_BREAK, 0.27F, 1);
+            }
         }
     }
 }

@@ -14,6 +14,7 @@ import java.util.Map;
 
 public class Bossbar {
     private final Map<Player, BossBar> bossbars = new HashMap<>();
+    private final Map<Player, BossBar> bossbars2 = new HashMap<>();
     private final JavaPlugin plugin;
     private final int tiempoInicial;
     private int tiempoRestante;
@@ -24,7 +25,7 @@ public class Bossbar {
         this.tiempoInicial = tiempoInicial;
         this.tiempoRestante = tiempoInicial;
     }
-    //Método para añadir la bossbar<
+    //Método para añadir la bossbar
     public void agregarBossbar(Player jugador) {
         if (!bossbars.containsKey(jugador)) {
             BossBar bossBar = Bukkit.createBossBar(
@@ -33,8 +34,41 @@ public class Bossbar {
                      BarStyle.SOLID
             );
             bossBar.addPlayer(jugador);
-            bossbars.put(jugador,bossBar);
+            bossbars.put(jugador, bossBar);
         }
+    }
+    public void agregarBossbar2(Player jugador) {
+        if (!bossbars2.containsKey(jugador)) {
+            BossBar bossBar2 = Bukkit.createBossBar(
+              ChatColor.AQUA + "Tiempo restate: 25 segundos",
+                    BarColor.BLUE,
+                    BarStyle.SOLID
+            );
+            bossBar2.addPlayer(jugador);
+            bossbars2.put(jugador, bossBar2);
+        }
+    }
+    public void Inicio2() {
+        new BukkitRunnable() {
+            private int tiempoEspera = 25;
+
+            @Override
+            public void run() {
+                if (tiempoEspera <= 0) {
+                    eliminarBossbar2(); // Eliminar la bossbar de espera
+                    cancel();
+                    return;
+                }
+
+                for (Map.Entry<Player, BossBar> entry : bossbars2.entrySet()) {
+                    BossBar bossBar2 = entry.getValue();
+                    bossBar2.setTitle(ChatColor.AQUA + "Tiempo restante: " + tiempoEspera + " segundos");
+                    bossBar2.setProgress((double) tiempoEspera / 25.0);
+                }
+
+                tiempoEspera--;
+            }
+        }.runTaskTimer(plugin, 0L, 20L);
     }
     //Configura al inicio la bossbar
     public void Inicio() {
@@ -58,6 +92,14 @@ public class Bossbar {
             }
         };
         task.runTaskTimer(plugin, 0L, 20L);
+    }
+    //Método que elimina la segunda bossbar
+    public void eliminarBossbar2() {
+        for (BossBar bossBar2 : bossbars2.values()) {
+            bossBar2.setVisible(false);
+            bossBar2.removeAll();
+        }
+        bossbars2.clear();
     }
     //Remueve la bossbar cuando termine el tiempo
     public void Finalizacion() {

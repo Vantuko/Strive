@@ -3,8 +3,10 @@ package com.badstudio.plugin.minigames.spleef;
 import com.badstudio.plugin.Main;
 import com.badstudio.plugin.minigames.spleef.utils.Bossbar;
 import com.badstudio.plugin.utils.GuardarMapa;
+import com.badstudio.plugin.commands.StriveComandos;
 
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,6 +20,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class Spleef implements CommandExecutor {
     private final Main plugin;
     private final GuardarMapa guardarMapa = new GuardarMapa();
@@ -26,6 +32,7 @@ public class Spleef implements CommandExecutor {
 
     public Spleef(Main plugin) {
         this.plugin = plugin;
+        this.bossbar = new Bossbar(plugin, plugin.getConfig().getInt("spleef.duracionJuego"));
     }
     public static boolean isJuegoActivo() {
         return juegoActivo;
@@ -45,10 +52,17 @@ public class Spleef implements CommandExecutor {
             }
             setJuegoActivo(true);
 
+            //Teletransporta a todos los jugadores al mundo Spleef
+            StriveComandos.tpAll();
+
             // Asegurarse de que todos los jugadores estén en modo Aventura
             for (Player jugador : mundo.getPlayers()) {
                 jugador.setGameMode(GameMode.ADVENTURE);
             }
+            for (Player jugador : mundo.getPlayers()) {
+                bossbar.agregarBossbar2(jugador);
+            }
+            bossbar.Inicio2();
 
             int x1 = plugin.getConfig().getInt("spleef.pos1.x1");
             int y1 = plugin.getConfig().getInt("spleef.pos1.y1");
@@ -66,7 +80,7 @@ public class Spleef implements CommandExecutor {
 
             guardarMapa.guardarMapa(mundo, x3, y3, z3, x4, y4, z4);
             mostrarMensajeSpleef();
-            Bukkit.getScheduler().runTaskLater(plugin, () -> inicio(mundo, x1, y1, z1, x2, y2, z2), 20 * 30L);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> inicio(mundo, x1, y1, z1, x2, y2, z2), 20 * 15L);
         } else {
             sender.sendMessage(ChatColor.RED + "Error al encontrar el mundo!");
         }
@@ -90,7 +104,7 @@ public class Spleef implements CommandExecutor {
                 }
                 if (tiempoRestante == 0) {
                     bossbar = new Bossbar(plugin, tiempoTotal);
-
+                    //Asegura que todos los jugadores estén en survival
                     for (Player jugador : mundo.getPlayers()) {
                         jugador.setGameMode(GameMode.SURVIVAL);
                     }
@@ -105,7 +119,11 @@ public class Spleef implements CommandExecutor {
                             darPala(jugador);
                             bossbar.Inicio();
                             inicializarBorde(mundo);
+                            Caida(mundo, 50);
+
                         }, 20 * 3L);
+
+                        eliminarBloques(mundo);
                     }
 
                     destruirBloques(mundo, x1, y1, z1, x2, y2, z2);
@@ -149,6 +167,93 @@ public class Spleef implements CommandExecutor {
             }
         }
     }
+    private void eliminarBloques(World mundo) {
+        int[] tiempos = {240, 180, 120, 60};
+
+        for (int tiempo : tiempos) {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> eliminarBloquesAleatorio(mundo), tiempo * 20L);
+        }
+    }
+    private void eliminarBloquesAleatorio(World mundo) {
+        List<Block> bloquesValidos = new ArrayList<>();
+        Random random = new Random();
+
+        agregarBloques(bloquesValidos, mundo, -7, 139, -7, 7, 137, 7); // Primera capa spleef
+        agregarBloques(bloquesValidos, mundo, -16, 129, -16, 16, 129, 16); // Segunda capa spleef
+        agregarBloques(bloquesValidos, mundo, -20,121, -20, 20, 121, 20); // Tercera capa spleef
+        agregarBloques(bloquesValidos, mundo, -22, 116, -22, 22, 116, 22); // Carta capa spleef
+        agregarBloques(bloquesValidos, mundo, -15, 111, -15, 15, 110, 15); // Quinta capa spleef
+        agregarBloques(bloquesValidos, mundo, -26, 102, -26, 26, 101, 26); // Sexta capa spleef
+        agregarBloques(bloquesValidos, mundo, -28, 95, -28, 28, 94, 28); // Séptima capa spleef
+        agregarBloques(bloquesValidos, mundo, -30, 86, -30, 30, 85, 30); // Octava capa spleef
+
+        List<List<Block>> capas = new ArrayList<>();
+        capas.add(new ArrayList<>()); // Capa 1
+        capas.add(new ArrayList<>()); // Capa 2
+        capas.add(new ArrayList<>()); // Capa 3
+        capas.add(new ArrayList<>()); // Capa 4
+        capas.add(new ArrayList<>()); // Capa 5
+        capas.add(new ArrayList<>()); // Capa 6
+        capas.add(new ArrayList<>()); // Capa 7
+        capas.add(new ArrayList<>()); // Capa 8
+
+        for (Block block : bloquesValidos) {
+            int y = block.getY();
+            if (y >= 137 && y <= 139) {
+                capas.getFirst().add(block);  // Primera capa
+            } else if (y >= 129 && y <= 137) {
+                capas.get(1).add(block);  // Segunda capa
+            } else if (y >= 121 && y <= 129) {
+                capas.get(2).add(block);  // Tercera capa
+            } else if (y >= 116 && y <= 121) {
+                capas.get(3).add(block);  // Cuarta capa
+            } else if (y >= 110 && y <= 116) {
+                capas.get(4).add(block);  // Quinta capa
+            } else if (y >= 101 && y <= 110) {
+                capas.get(5).add(block);  // Sexta capa
+            } else if (y >= 94 && y <= 101) {
+                capas.get(6).add(block);  // Séptima capa
+            } else if (y >= 85 && y <= 94) {
+                capas.get(7).add(block);  // Octava capa
+            }
+        }
+        for (List<Block> capa : capas) {
+            if (!capa.isEmpty()) {
+                int toRemove = Math.min(plugin.getConfig().getInt("spleef.bloques_removidos"), capa.size());
+                for (int i = 0; i < toRemove; i++) {
+                    int randomIndex = random.nextInt(capa.size());
+                    Block block = capa.remove(randomIndex);
+                    block.setType(Material.ICE);
+
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            block.setType(Material.AIR);
+                        }
+                    }.runTaskLater(plugin, 3 * 20L);
+                }
+            }
+        }
+    }
+    private void agregarBloques(List<Block> lista, World mundo, int x1, int y1, int z1, int x2, int y2, int z2) {
+        int minX = Math.min(x1, x2);
+        int maxX = Math.max(x1, x2);
+        int minY = Math.min(y1, y2);
+        int maxY = Math.max(y1, y2);
+        int minZ = Math.min(z1, z2);
+        int maxZ = Math.max(z1, z2);
+
+        for (int y = minY; y <= maxY; y++) {
+            for (int x = minX; x <= maxX; x++) {
+                for (int z = minZ; z <= maxZ; z++) {
+                    Block block = mundo.getBlockAt(x, y, z);
+                    if (block.getType() == Material.SNOW_BLOCK || block.getType() == Material.SNOW) {
+                        lista.add(block);
+                    }
+                }
+            }
+        }
+    }
     public void inicializarBorde(World mundo) {
         int initialSize = plugin.getConfig().getInt("spleef.world_border.initial_size");
         int finalSize = plugin.getConfig().getInt("spleef.world_border.final_size");
@@ -171,10 +276,30 @@ public class Spleef implements CommandExecutor {
         palaPiedra.setItemMeta(palaPiedraMeta);
         player.getInventory().setItem(0, palaPiedra);
     }
+    public void Caida(World mundo, int alturaMuerte) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!Spleef.isJuegoActivo()) {
+                    cancel();
+                    return;
+                }
+
+                for (Player jugador : mundo.getPlayers()) {
+                    if (jugador.getGameMode() == GameMode.SURVIVAL && jugador.getLocation().getY() <= alturaMuerte) {
+                        jugador.setHealth(0);
+                        jugador.teleport(new Location(mundo,0, 155,0));
+                        jugador.sendMessage(net.md_5.bungee.api.ChatColor.RED + "¡Has caído demasiado bajo y has sido eliminado!");
+                        jugador.playSound(jugador.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1, 1);
+                    }
+                }
+            }
+        }.runTaskTimer(plugin, 0L, 20L);
+    }
     private void mostrarMensajeSpleef() {
         String mensaje = ChatColor.translateAlternateColorCodes('&',
                 "------------\n" +
-                        net.md_5.bungee.api.ChatColor.of("#CAE3E6") + "[❄&f] " + net.md_5.bungee.api.ChatColor.of("#CAE3E6") + "Spleef &f[" + net.md_5.bungee.api.ChatColor.of("#CAE3E6") + "❄&f]\n" +
+                        net.md_5.bungee.api.ChatColor.of("#CAE3E6") + "[❄] " + net.md_5.bungee.api.ChatColor.of("#CAE3E6") + "Spleef &f[" + net.md_5.bungee.api.ChatColor.of("#CAE3E6") + "❄&f]\n" +
                         net.md_5.bungee.api.ChatColor.of("#CAE3E6") + "Trabaja con tu equipo para\n" +
                         net.md_5.bungee.api.ChatColor.of("#CAE3E6") + "romper los bloques bajo tus\n" +
                         net.md_5.bungee.api.ChatColor.of("#CAE3E6") + "oponentes y quedar último en pie\n" +
@@ -187,6 +312,5 @@ public class Spleef implements CommandExecutor {
             }
         }
     }
-
 
 }

@@ -1,12 +1,13 @@
 com\badstudio\plugin\minigames\spleef\utils\Bossbar.class
+com\badstudio\plugin\minigames\spleef\Spleef$2.class
 com\badstudio\plugin\minigames\spleef\listeners\SpleefListener.class
 com\badstudio\plugin\Main.class
 com\badstudio\plugin\minigames\spleef\Spleef.class
+com\badstudio\plugin\minigames\spleef\utils\Bossbar$2.class
 com\badstudio\plugin\utils\Config.class
 com\badstudio\plugin\minigames\HungerGames\HungerGames.class
 com\badstudio\plugin\utils\GuardarMapa.class
 com\badstudio\plugin\minigames\spleef\utils\Bossbar$1.class
-com\badstudio\plugin\minigames\spleef\listeners\SpleefListener$1.class
 com\badstudio\plugin\commands\StriveComandos.class
 com\badstudio\plugin\commands\StriveTabCompleter.class
 com\badstudio\plugin\minigames\spleef\Spleef$1.class

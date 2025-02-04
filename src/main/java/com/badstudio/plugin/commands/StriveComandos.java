@@ -142,13 +142,24 @@ public class StriveComandos implements CommandExecutor {
         player.sendMessage(ChatColor.GOLD + "/strive host");
         player.sendMessage(ChatColor.GOLD + "/strive reload");
     }
+    //Método para el TP hacia el mundo spleef
     public static void TP(List<Player> jugadores, String mundo, int X, int Y, int Z) {
-        for (Player jugador : jugadores ) {
-            jugadores = new ArrayList<>(Bukkit.getOnlinePlayers());
-            if (Spleef.isJuegoActivo()){
-                StriveComandos.TP(jugadores, "Spleef", 0, 156, 0);
-            }
+        if (!Spleef.isJuegoActivo()) {
+            return;
         }
+        World world = Bukkit.getWorld(mundo);
+        if (world == null) {
+            Bukkit.getLogger().warning("El mundo " + mundo + " no existe.");
+            return;
+        }
+        for (Player jugador : jugadores) {
+            jugador.teleport(world.getBlockAt(X, Y, Z).getLocation());
+        }
+    }
+    //Método para tp a todos los jugadores al mundo Spleef en ciertas coordenadas
+    public static void tpAll() {
+        List<Player> jugadores = new ArrayList<>(Bukkit.getOnlinePlayers());
+        TP(jugadores, "Spleef", 0, 156, 0);
     }
 }
 

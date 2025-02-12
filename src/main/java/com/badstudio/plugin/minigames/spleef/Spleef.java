@@ -11,7 +11,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
@@ -119,7 +118,7 @@ public class Spleef implements CommandExecutor {
                             darPala(jugador);
                             bossbar.Inicio();
                             inicializarBorde(mundo);
-                            Caida(mundo, 50);
+                            Caida(mundo, 70);
 
                         }, 20 * 3L);
 
@@ -128,21 +127,15 @@ public class Spleef implements CommandExecutor {
 
                     destruirBloques(mundo, x1, y1, z1, x2, y2, z2);
 
+                    Bukkit.getScheduler().runTaskLater(plugin, () -> convertirBloquesHielo(mundo, x1, y1, z1, x2, y2, z2), 20 * (plugin.getConfig().getLong("spleef.duracionJuego")));
+
                     Bukkit.getScheduler().runTaskLater(plugin, () -> {
                         setJuegoActivo(false);
 
-                        for (Player jugador : mundo.getPlayers()) {
-                            Inventory inventory = jugador.getInventory();
-
-                            for (ItemStack item : inventory.getContents()) {
-                                if (item != null && (item.getType() == Material.STONE_SHOVEL || item.getType() == Material.DIAMOND_SHOVEL || item.getType() == Material.SNOWBALL)) {
-                                    inventory.remove(item);
-                                }
-                            }
-                        }
                         guardarMapa.restaurarMapa(mundo);
-                        guardarMapa.limpiarDatos();
                         bossbar.Finalizacion();
+                        restaurarBorde(mundo);
+
                     }, 20 * (plugin.getConfig().getLong("spleef.duracionJuego")));
 
                     cancel();
@@ -150,6 +143,38 @@ public class Spleef implements CommandExecutor {
             }
         }.runTaskTimer(plugin, 0L, 20L);
     }
+    private void convertirBloquesHielo(World mundo, int x1, int y1, int z1, int x2, int y2, int z2) {
+        int minX = Math.min(x1, x2);
+        int maxX = Math.max(x1, x2);
+        int minY = Math.min(y1, y2);
+        int maxY = Math.max(y1, y2);
+        int minZ = Math.min(z1, z2);
+        int maxZ = Math.max(z1, z2);
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                for (int z = minZ; z <= maxZ; z++) {
+                    Block block = mundo.getBlockAt(x, y, z);
+                    if (block.getType() == Material.SNOW_BLOCK || block.getType() == Material.SNOW) {
+                        block.setType(Material.ICE);
+                    }
+                }
+            }
+        }
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            for (int x = minX; x <= maxX; x++) {
+                for (int y = minY; y <= maxY; y++) {
+                    for (int z = minZ; z <= maxZ; z++) {
+                        Block block = mundo.getBlockAt(x, y, z);
+                        if (block.getType() == Material.ICE) {
+                            block.setType(Material.AIR);
+                        }
+                    }
+                }
+            }
+            }, 20 * 30L);
+    }
+
+
     private void destruirBloques(World mundo, int x1, int y1, int z1, int x2, int y2, int z2) {
         int minX = Math.min(x1, x2);
         int maxX = Math.max(x1, x2);
@@ -157,7 +182,6 @@ public class Spleef implements CommandExecutor {
         int maxY = Math.max(y1, y2);
         int minZ = Math.min(z1, z2);
         int maxZ = Math.max(z1, z2);
-
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
@@ -169,23 +193,25 @@ public class Spleef implements CommandExecutor {
     }
     private void eliminarBloques(World mundo) {
         int[] tiempos = {240, 180, 120, 60};
-
         for (int tiempo : tiempos) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> eliminarBloquesAleatorio(mundo), tiempo * 20L);
         }
     }
+    public void restaurarBorde(World mundo) {
+        WorldBorder border = mundo.getWorldBorder();
+        border.setSize(100);
+    }
     private void eliminarBloquesAleatorio(World mundo) {
         List<Block> bloquesValidos = new ArrayList<>();
         Random random = new Random();
-
-        agregarBloques(bloquesValidos, mundo, -7, 139, -7, 7, 137, 7); // Primera capa spleef
-        agregarBloques(bloquesValidos, mundo, -16, 129, -16, 16, 129, 16); // Segunda capa spleef
-        agregarBloques(bloquesValidos, mundo, -20,121, -20, 20, 121, 20); // Tercera capa spleef
-        agregarBloques(bloquesValidos, mundo, -22, 116, -22, 22, 116, 22); // Carta capa spleef
-        agregarBloques(bloquesValidos, mundo, -15, 111, -15, 15, 110, 15); // Quinta capa spleef
-        agregarBloques(bloquesValidos, mundo, -26, 102, -26, 26, 101, 26); // Sexta capa spleef
-        agregarBloques(bloquesValidos, mundo, -28, 95, -28, 28, 94, 28); // Séptima capa spleef
-        agregarBloques(bloquesValidos, mundo, -30, 86, -30, 30, 85, 30); // Octava capa spleef
+        agregarBloques(bloquesValidos, mundo, -7, 139, -7, 7, 137, 7);              
+        agregarBloques(bloquesValidos, mundo, -16, 129, -16, 16, 129, 16);  
+        agregarBloques(bloquesValidos, mundo, -20, 121, -20, 20, 121, 20);  
+        agregarBloques(bloquesValidos, mundo, -22, 116, -22, 22, 116, 22);  
+        agregarBloques(bloquesValidos, mundo, -15, 111, -15, 15, 110, 15);  
+        agregarBloques(bloquesValidos, mundo, -26, 102, -26, 26, 101, 26);  
+        agregarBloques(bloquesValidos, mundo, -28, 95, -28, 28, 94, 28);     
+        agregarBloques(bloquesValidos, mundo, -30, 86, -30, 30, 85, 30);
 
         List<List<Block>> capas = new ArrayList<>();
         capas.add(new ArrayList<>()); // Capa 1
@@ -287,14 +313,12 @@ public class Spleef implements CommandExecutor {
 
                 for (Player jugador : mundo.getPlayers()) {
                     if (jugador.getGameMode() == GameMode.SURVIVAL && jugador.getLocation().getY() <= alturaMuerte) {
-                        jugador.setHealth(0);
-                        jugador.teleport(new Location(mundo,0, 155,0));
-                        jugador.sendMessage(net.md_5.bungee.api.ChatColor.RED + "¡Has caído demasiado bajo y has sido eliminado!");
-                        jugador.playSound(jugador.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1, 1);
+                        jugador.damage(jugador.getHealth() + 1);
+                        Bukkit.getScheduler().runTaskLater(plugin, () -> jugador.setGameMode(GameMode.SPECTATOR), 2L);
                     }
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(plugin, 0L,5L);
     }
     private void mostrarMensajeSpleef() {
         String mensaje = ChatColor.translateAlternateColorCodes('&',
@@ -312,5 +336,4 @@ public class Spleef implements CommandExecutor {
             }
         }
     }
-
 }

@@ -47,7 +47,7 @@ public class Bossbar {
             bossBar2.addPlayer(jugador);
             bossbars2.put(jugador, bossBar2);
         }
-    }
+    }   
     public void Inicio2() {
         new BukkitRunnable() {
             private int tiempoEspera = 25;

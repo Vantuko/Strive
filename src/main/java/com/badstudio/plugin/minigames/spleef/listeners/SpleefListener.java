@@ -15,8 +15,10 @@ import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -71,6 +73,7 @@ public class SpleefListener implements Listener {
                     } else if (herramientaEnMano.getType() == Material.DIAMOND_SHOVEL) {
                         jugador.getInventory().addItem(new ItemStack(Material.SNOWBALL, 1));
                         jugador.playSound(jugador.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.7F, 0.9F);
+                        mejorarPala(jugador);
                     }
                     bloquesDestruidos.put(jugadorID, 0); // Reinicia el contador
                 }
@@ -111,26 +114,48 @@ public class SpleefListener implements Listener {
             }
         }
     }
+    @EventHandler
+    public void muerteJugador(PlayerDeathEvent e) {
+        Player jugador = e.getEntity();
+        String mensaje = ChatColor.RED + jugador.getName() + " ha sido eliminado del spleef!";
+
+        if (!Spleef.isJuegoActivo() || !jugador.getWorld().getName().equalsIgnoreCase("Spleef")) return;
+
+        e.setDeathMessage(null);
+
+        Bukkit.broadcastMessage(mensaje);
+    }
+    @EventHandler
+    public void respawnJugador(PlayerRespawnEvent e) {
+        Player jugador = e.getPlayer();
+        if (Spleef.isJuegoActivo() && jugador.getWorld().getName().equalsIgnoreCase("Spleef")) {
+            Location spawn = new Location(Bukkit.getWorld("Spleef"), 0, 155, 0);
+            e.setRespawnLocation(spawn);
+            jugador.setGameMode(GameMode.SPECTATOR);
+        }
+    }
     //Método para mejorar la pala
     private void mejorarPala(Player jugador) {
-        ItemStack palaActual = jugador.getInventory().getItemInMainHand();
-        Material tipoPala = palaActual.getType();
-
-        if (tipoPala == Material.STONE_SHOVEL) {
+        ItemStack item = jugador.getInventory().getItemInMainHand();
+        if (item.getType() == Material.STONE_SHOVEL) {
             ItemStack nuevaPala = new ItemStack(Material.DIAMOND_SHOVEL);
             ItemMeta meta = nuevaPala.getItemMeta();
             if (meta != null) {
                 meta.setUnbreakable(true);
+                meta.addEnchant(Enchantment.EFFICIENCY, 1, true);
                 nuevaPala.setItemMeta(meta);
             }
             jugador.getInventory().setItemInMainHand(nuevaPala);
-            jugador.playSound(jugador.getLocation(), Sound.ENTITY_ITEM_BREAK, 0.27F, 1);
-        } else if (tipoPala == Material.DIAMOND_SHOVEL) {
-            int eficienciaActual = palaActual.getEnchantmentLevel(Enchantment.EFFICIENCY);
-            if (eficienciaActual < 5) {
-                palaActual.addUnsafeEnchantment(Enchantment.EFFICIENCY, eficienciaActual + 1);
-                jugador.getInventory().setItemInMainHand(palaActual);
-                jugador.playSound(jugador.getLocation(), Sound.ENTITY_ITEM_BREAK, 0.27F, 1);
+        } else if (item.getType() == Material.DIAMOND_SHOVEL) {
+            ItemMeta meta = item.getItemMeta();
+            if (meta != null) {
+                int currentLevel = meta.hasEnchant(Enchantment.EFFICIENCY) ? meta.getEnchantLevel(Enchantment.EFFICIENCY) : 0;
+                if (currentLevel < 5) {
+                    meta.removeEnchant(Enchantment.EFFICIENCY);
+                    meta.addEnchant(Enchantment.EFFICIENCY, currentLevel + 1, true);
+                    meta.setUnbreakable(true);
+                    item.setItemMeta(meta);
+                }
             }
         }
     }

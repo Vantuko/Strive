@@ -1,6 +1,6 @@
 # Sirve para verificar cuantos jugadores debe haber para iniciar.
 purga:
-  jugadores_maximos: 1
+  jugadores_maximos: 0
 
 strive-commands:
   - host
@@ -25,7 +25,7 @@ spleef:
     y2: 200
     z2: -30
   duracionInicio: 11 # (Segundos) No se incluye el último número Ej. Pones 10 pero empieza en 9
-  duracionJuego: 300 # (Segundos) No incluyas la duracion del inicio
+  duracionJuego: 304 # (Segundos) No incluyas la duracion del inicio
   bloques_removidos: 25
   world_border:
     initial_size: 100

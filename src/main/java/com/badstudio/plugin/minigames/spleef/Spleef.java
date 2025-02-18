@@ -3,7 +3,6 @@ package com.badstudio.plugin.minigames.spleef;
 import com.badstudio.plugin.Main;
 import com.badstudio.plugin.minigames.spleef.utils.Bossbar;
 import com.badstudio.plugin.utils.GuardarMapa;
-import com.badstudio.plugin.commands.StriveComandos;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -51,8 +50,7 @@ public class Spleef implements CommandExecutor {
             }
             setJuegoActivo(true);
 
-            //Teletransporta a todos los jugadores al mundo Spleef
-            StriveComandos.tpAll();
+            tpAll();
 
             // Asegurarse de que todos los jugadores estén en modo Aventura
             for (Player jugador : mundo.getPlayers()) {
@@ -84,6 +82,23 @@ public class Spleef implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "Error al encontrar el mundo!");
         }
         return true;
+    }
+    public static void TP(List<Player> jugadores, String mundo, int X, int Y, int Z) {
+        if (!Spleef.isJuegoActivo()) {
+            return;
+        }
+        World world = Bukkit.getWorld(mundo);
+        if (world == null) {
+            Bukkit.getLogger().warning("El mundo " + mundo + " no existe.");
+            return;
+        }
+        for (Player jugador : jugadores) {
+            jugador.teleport(world.getBlockAt(X, Y, Z).getLocation());
+        }
+    }
+    public static void tpAll() {
+        List<Player> jugadores = new ArrayList<>(Bukkit.getOnlinePlayers());
+        TP(jugadores, "Spleef", 0, 156, 0);
     }
     private void inicio(World mundo, int x1, int y1, int z1, int x2, int y2, int z2) {
         final int tiempoTotal = plugin.getConfig().getInt("spleef.duracionJuego");
@@ -153,7 +168,7 @@ public class Spleef implements CommandExecutor {
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
-                    Block block = mundo.getBlockAt(x, y, z);
+                    Block block = mundo.getBlockAt(x, y, z);    
                     if (block.getType() == Material.SNOW_BLOCK || block.getType() == Material.SNOW) {
                         block.setType(Material.ICE);
                     }

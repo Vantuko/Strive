@@ -30,8 +30,9 @@ public class GuardarMapa {
                 }
             }
         }
-        Bukkit.getLogger().info(ChatColor.GREEN + "Mapa guardado en memoria. Total de bloques: " + bloquesOriginales.size());
+        Bukkit.getLogger().info("Mapa guardado en memoria. Total de bloques: " + bloquesOriginales.size());
     }
+
     //Método para restaurar el mapa
     public void restaurarMapa(World mundo) {
         if (bloquesOriginales.isEmpty()) {
@@ -46,11 +47,6 @@ public class GuardarMapa {
             bloque.setType(tipo);
         }
         Bukkit.getLogger().info(ChatColor.GREEN + "Mapa restaurado correctamente. Bloques restaurados: " + bloquesOriginales.size());
-    }
-    //Método para limpiar datos de los bloques guardados
-    public void limpiarDatos() {
-        bloquesOriginales.clear();
-        Bukkit.getLogger().info("Datos de bloques en memoria limpiados.");
     }
 }
 

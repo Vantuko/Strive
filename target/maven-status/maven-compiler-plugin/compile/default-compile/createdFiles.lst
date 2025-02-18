@@ -6,9 +6,11 @@ com\badstudio\plugin\minigames\spleef\Spleef.class
 com\badstudio\plugin\minigames\spleef\utils\Bossbar$2.class
 com\badstudio\plugin\utils\Config.class
 com\badstudio\plugin\minigames\HungerGames\HungerGames.class
+com\badstudio\plugin\gui\HostGUI.class
 com\badstudio\plugin\minigames\spleef\Spleef$3.class
 com\badstudio\plugin\utils\GuardarMapa.class
 com\badstudio\plugin\minigames\spleef\utils\Bossbar$1.class
+com\badstudio\plugin\utils\PurgeUtil.class
 com\badstudio\plugin\commands\StriveComandos.class
 com\badstudio\plugin\commands\StriveTabCompleter.class
 com\badstudio\plugin\minigames\spleef\Spleef$1.class
